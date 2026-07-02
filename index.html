@@ -751,7 +751,21 @@
       font-size: 13px;
       font-weight: 500;
       z-index: 999;
-      display: none
+      display: none;
+      box-shadow: 0 4px 16px rgba(29, 158, 117, .35);
+      animation: toastIn .2s ease
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateY(-8px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
     }
 
     .toast.err {
@@ -983,6 +997,61 @@
       padding: 2px 7px;
       border-radius: 5px;
       font-weight: 500
+    }
+
+    #confirm-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(44, 44, 42, .45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000
+    }
+
+    .confirm-box {
+      background: #fff;
+      border-radius: 14px;
+      padding: 22px 24px;
+      width: 320px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, .22)
+    }
+
+    .confirm-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: #e1f5ee;
+      color: #0f6e56;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      font-size: 19px
+    }
+
+    .confirm-icon.danger {
+      background: #fbeaf0;
+      color: #d4537e
+    }
+
+    .confirm-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 5px
+    }
+
+    .confirm-msg {
+      font-size: 13px;
+      color: #5f5e5a;
+      line-height: 1.6;
+      margin-bottom: 18px
+    }
+
+    .confirm-acts {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end
     }
 
     #offer-detail {
@@ -1670,7 +1739,7 @@
       opacity: 0.6;
     }
 
-    .role-admin input[type="text"] {
+    .role-admin input[type="text"]:not(.search-input) {
       pointer-events: none;
       opacity: 0.6;
     }
@@ -1691,6 +1760,11 @@
       opacity: 0;
     }
 
+    #confirm-overlay .btn {
+      pointer-events: auto !important;
+      opacity: 1 !important;
+    }
+
     .role-admin .adm1-acts {
       display: flex !important;
     }
@@ -1706,6 +1780,23 @@
     }
 
     .role-admin .btn-download {
+      pointer-events: auto !important;
+      opacity: 1 !important;
+    }
+
+    .role-admin #pg-history .btn-exec-interest {
+      pointer-events: auto !important;
+      opacity: 1 !important;
+      display: flex !important;
+    }
+
+    .role-admin #pg-history .btn-int-action {
+      pointer-events: auto !important;
+      opacity: 1 !important;
+    }
+
+    .role-admin #pg-history input.int-input,
+    .role-admin #pg-history select.int-select {
       pointer-events: auto !important;
       opacity: 1 !important;
     }
@@ -1742,7 +1833,9 @@
     .role-admin #pg-offer-adm textarea,
     .role-admin #pg-offer-adm .btn,
     .role-admin #pg-offer-adm .oa-btn-approve,
-    .role-admin #pg-offer-adm .oa-btn-return {
+    .role-admin #pg-offer-adm .oa-btn-return,
+    .role-admin #pg-adm textarea,
+    .role-admin #pg-adm .btn {
       pointer-events: auto !important;
       opacity: 1 !important;
     }
@@ -2118,7 +2211,8 @@
       <div class="ni" data-p="int"><i class="ti ti-calendar"></i>นัดสัมภาษณ์</div>
       <div class="ni" data-p="adm"><i class="ti ti-clipboard-check"></i>รอผู้บริหาร</div>
       <div class="ni" data-p="offer"><i class="ti ti-briefcase"></i>Job Offer</div>
-      <div class="ni" data-p="offer-adm"><i class="ti ti-clipboard-check"></i>อนุมัติ Offer</div>
+      <div class="ni" data-p="history"><i class="ti ti-history"></i>ประวัติผู้สมัคร</div>
+      <div class="ni" data-p="exec-interested"><i class="ti ti-star"></i>ผู้บริหารสนใจ</div>
       <div class="ni" data-p="rep"><i class="ti ti-chart-bar"></i>รายงาน</div>
       <div class="ni" data-p="exec"><i class="ti ti-eye"></i>ภาพรวมผู้บริหาร</div>
     </nav>
@@ -2144,12 +2238,13 @@
           <div class="of2-filter-chip on" data-lf="all" onclick="setListFilter('all')">ทั้งหมด</div>
           <div class="of2-filter-chip" data-lf="s1" onclick="setListFilter('s1')">อัปโหลดแล้ว</div>
           <div class="of2-filter-chip" data-lf="s2" onclick="setListFilter('s2')">HR คัดกรอง</div>
-          <div class="of2-filter-chip" data-lf="s3" onclick="setListFilter('s3')">รอผู้บริหาร รอบ1</div>
+          <div class="of2-filter-chip" data-lf="s3" onclick="setListFilter('s3')" style="display:none">รอผู้บริหาร รอบ1
+          </div>
           <div class="of2-filter-chip" data-lf="s4" onclick="setListFilter('s4')">นัดสัมภาษณ์</div>
           <div class="of2-filter-chip" data-lf="s5" onclick="setListFilter('s5')">บันทึกผลสัมภาษณ์</div>
-          <div class="of2-filter-chip" data-lf="s6" onclick="setListFilter('s6')">รอผู้บริหาร รอบ2</div>
+          <div class="of2-filter-chip" data-lf="s6" onclick="setListFilter('s6')">รอผู้บริหาร</div>
           <div class="of2-filter-chip" data-lf="s7" onclick="setListFilter('s7')">เตรียม Offer</div>
-          <div class="of2-filter-chip" data-lf="s8" onclick="setListFilter('s8')">รออนุมัติ Offer</div>
+          <div class="of2-filter-chip" data-lf="waiting" onclick="setListFilter('waiting')">รอผู้สมัครตอบรับ</div>
           <div class="of2-filter-chip" data-lf="hired" onclick="setListFilter('hired')">รับเข้าทำงาน</div>
           <div class="of2-filter-chip" data-lf="closed" onclick="setListFilter('closed')">ปิดเคส</div>
         </div>
@@ -2171,25 +2266,67 @@
         </div>
         <div class="fg-row">
           <div class="fg"><label>ตำแหน่งที่สมัคร <span>*</span></label>
-            <select id="u-pos">
+            <select id="u-pos" onchange="toggleOtherPos()">
               <option value="">-- เลือกตำแหน่ง --</option>
-              <option>ช่างไฟฟ้า</option>
-              <option>HR Officer</option>
-              <option>Graphic Designer</option>
-              <option>Sale Admin</option>
-              <option>Software Developer</option>
-              <option>บัญชี</option>
+              <optgroup label="Customer Service">
+                <option>CS ประสานงาน</option>
+                <option>CS Facebook</option>
+                <option>Support Facebook</option>
+              </optgroup>
+              <optgroup label="การตลาด">
+                <option>การตลาด Facebook</option>
+                <option>การตลาดออนไลน์</option>
+                <option>KOL Specialist</option>
+                <option>Branding</option>
+                <option>Live</option>
+                <option>Content Creator</option>
+                <option>Graphic Design</option>
+              </optgroup>
+              <optgroup label="Sales">
+                <option>Sale Wholesale ขายส่ง</option>
+                <option>Add-order</option>
+                <option>Telesale</option>
+                <option>Sale Admin</option>
+              </optgroup>
+              <optgroup label="จัดซื้อ">
+                <option>Purchasing จัดซื้อต่างประเทศ</option>
+                <option>Purchasing จัดซื้อในประเทศ</option>
+              </optgroup>
+              <optgroup label="บัญชี / การเงิน">
+                <option>Accountant</option>
+                <option>Internal Auditor</option>
+              </optgroup>
+              <optgroup label="HR / IT">
+                <option>Human Resources</option>
+                <option>IT Support</option>
+              </optgroup>
+              <optgroup label="หัวหน้าฝ่าย">
+                <option>หัวหน้าฝ่ายบุคคล</option>
+                <option>หัวหน้าการตลาด</option>
+                <option>หัวหน้าบัญชี</option>
+                <option>หัวหน้าคลังสินค้า</option>
+              <optgroup label="ช่าง / เลขา">
+                <option>ช่างเคลม</option>
+                <option>เลขา</option>
+              </optgroup>
+              </optgroup>
+              <option value="อื่นๆ">อื่นๆ (ระบุเอง)</option>
             </select>
           </div>
           <div class="fg"><label>แหล่งที่มา</label>
             <select id="u-src">
               <option value="">-- เลือก --</option>
-              <option>Walk-in</option>
-              <option>JobsDB</option>
-              <option>LinkedIn</option>
+              <option>Jobthai</option>
+              <option>Jobbkk</option>
               <option>Facebook</option>
-              <option>แนะนำโดยพนักงาน</option>
+              <option>Walk-in</option>
+              <option>อื่นๆ</option>
             </select>
+          </div>
+        </div>
+        <div class="fg-row" id="u-pos-other-row" style="display:none">
+          <div class="fg"><label>ระบุตำแหน่งเอง <span>*</span></label>
+            <input type="text" id="u-pos-other" placeholder="กรอกชื่อตำแหน่ง">
           </div>
         </div>
       </div>
@@ -2227,8 +2364,7 @@
       <div class="pg-title"><i class="ti ti-clipboard-check"></i>รอผู้บริหารอนุมัติ</div>
       <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
         <div class="of2-filter-chip on" data-af="all" onclick="setAdmFilter('all')">ทั้งหมด</div>
-        <div class="of2-filter-chip" data-af="round1" onclick="setAdmFilter('round1')">รอบ 1</div>
-        <div class="of2-filter-chip" data-af="round2" onclick="setAdmFilter('round2')">รอบ 2</div>
+        <div class="of2-filter-chip" data-af="round2" onclick="setAdmFilter('round2')">รอ</div>
       </div>
       <div id="adm-list"></div>
     </div>
@@ -2261,8 +2397,8 @@
       <div id="offer-adm-list-col">
         <div class="lh">
           <h2>อนุมัติ Offer</h2>
-          <div class="sb"><i class="ti ti-search"></i><input type="text" id="oa-search" placeholder="ค้นหา..."
-              oninput="renderOfferAdm()"></div>
+          <div class="sb"><i class="ti ti-search"></i><input type="text" id="oa-search" class="search-input"
+              placeholder="ค้นหา..." oninput="renderOfferAdm()"></div>
         </div>
         <div class="of2-filter-row" id="oa-filter-row">
           <div class="of2-filter-chip on" data-oa="all" onclick="setOAFilter('all')">ทั้งหมด</div>
@@ -2278,6 +2414,35 @@
     </div>
     <!-- ============ END OFFER APPROVAL PAGE ============ -->
 
+    <!-- ============ HISTORY PAGE (admin) ============ -->
+    <div class="pg" id="pg-history">
+      <div id="history-list-col"
+        style="width:250px;border-right:1px solid #e8e6e0;background:#fff;display:flex;flex-direction:column;flex-shrink:0">
+        <div class="lh">
+          <h2>ประวัติผู้สมัคร</h2>
+          <div class="sb"><i class="ti ti-search"></i><input type="text" id="hist-search" class="search-input"
+              placeholder="ค้นหา..." oninput="renderHistory()"></div>
+        </div>
+        <div style="display:flex;gap:5px;padding:8px 10px;flex-wrap:wrap;border-bottom:1px solid #f0ede8">
+          <div class="of2-filter-chip on" data-hf="all" onclick="setHistFilter('all')">ทั้งหมด</div>
+          <div class="of2-filter-chip" data-hf="pre-int" onclick="setHistFilter('pre-int')">ก่อนสัมภาษณ์</div>
+          <div class="of2-filter-chip" data-hf="active" onclick="setHistFilter('active')">กำลังดำเนินการ</div>
+          <div class="of2-filter-chip" data-hf="hired" onclick="setHistFilter('hired')">รับเข้าทำงาน</div>
+          <div class="of2-filter-chip" data-hf="closed" onclick="setHistFilter('closed')">ปิดเคส</div>
+        </div>
+        <div id="history-alist" style="flex:1;overflow-y:auto;padding:4px 0"></div>
+      </div>
+      <div id="history-detail" style="flex:1;display:flex;flex-direction:column;overflow:hidden;background:#f5f4f1">
+        <div class="empty"><i class="ti ti-history"></i>เลือกผู้สมัครเพื่อดูประวัติ</div>
+      </div>
+    </div>
+    <!-- ============ END HISTORY PAGE ============ -->
+
+    <div class="pg" id="pg-exec-interested"
+      style="flex-direction:column;padding:24px 28px;overflow-y:auto;background:#f5f4f1">
+      <div class="pg-title"><i class="ti ti-star"></i>ผู้บริหารสนใจสัมภาษณ์</div>
+      <div id="exec-interested-list"></div>
+    </div>
     <div class="pg" id="pg-exec">
       <div class="pg-title"><i class="ti ti-eye"></i>ภาพรวมผู้บริหาร</div>
       <div id="exec-list"></div>
@@ -2294,6 +2459,18 @@
 
   <div class="toast" id="toast"></div>
 
+  <div id="confirm-overlay">
+    <div class="confirm-box">
+      <div class="confirm-icon" id="confirm-icon"><i class="ti ti-help-circle"></i></div>
+      <div class="confirm-title" id="confirm-title">ยืนยันการดำเนินการ</div>
+      <div class="confirm-msg" id="confirm-msg">คุณต้องการดำเนินการนี้ใช่หรือไม่?</div>
+      <div class="confirm-acts">
+        <button class="btn" id="confirm-cancel-btn">ยกเลิก</button>
+        <button class="btn btn-g" id="confirm-ok-btn">ยืนยัน</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const _sb = supabase.createClient(
       'https://rryqdhqenzifnpssnngs.supabase.co',
@@ -2301,8 +2478,8 @@
     );
 
     const ROLE_CONFIG = {
-      hr: { pages: ['list', 'upload', 'int', 'adm', 'offer', 'rep'] },
-      admin: { pages: ['adm', 'offer-adm', 'exec', 'rep'] },
+      hr: { pages: ['list', 'upload', 'int', 'adm', 'offer', 'exec-interested', 'rep'] },
+      admin: { pages: ['adm', 'history', 'exec', 'exec-interested', 'rep'] },
     };
 
     const AVCOLORS = [
@@ -2314,15 +2491,14 @@
     const STEPS = [
       { s: 1, lbl: 'อัปโหลดเรซูเม่', k: 'upload' },
       { s: 2, lbl: 'HR คัดกรองเบื้องต้น', k: 'hr' },
-      { s: 3, lbl: 'ผู้บริหารอนุมัติ รอบ 1', k: 'adm1' },
       { s: 4, lbl: 'นัดสัมภาษณ์', k: 'int' },
       { s: 5, lbl: 'บันทึกผลสัมภาษณ์ (HR)', k: 'hrres' },
       { s: 6, lbl: 'ผู้บริหารอนุมัติ รอบ 2', k: 'adm2' },
       { s: 7, lbl: 'HR เตรียม Offer', k: 'offer' },
-      { s: 8, lbl: 'ผู้บริหารอนุมัติ Offer', k: 'adm3' },
     ];
 
     let DATA = [];
+    let EXEC_DATA = [];
     let selId = null;
     let currentUser = null;
     let selOfferId = null;
@@ -2339,20 +2515,94 @@
       if (!d) return '';
       try { return new Date(d).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }) } catch { return d }
     }
+    function resumeBtnHtml(a) {
+      if (!a.resumeUrl) return '';
+      return `<a href="${a.resumeUrl}" target="_blank" class="btn-download" style="padding:5px 11px;border-radius:7px;font-size:12px;font-family:inherit;cursor:pointer;border:1px solid #cbe6da;background:#e1f5ee;color:#085041;display:flex;align-items:center;gap:5px;text-decoration:none;pointer-events:auto!important;opacity:1!important"><i class="ti ti-file-download" style="font-size:13px"></i>ดูเรซูเม่</a>`;
+    }
     function showToast(msg, err = false) {
       const t = document.getElementById('toast');
       t.textContent = (err ? '✗ ' : '✓ ') + msg;
       t.className = 'toast' + (err ? ' err' : '');
       t.style.display = 'block';
-      setTimeout(() => t.style.display = 'none', 2800);
+      setTimeout(() => t.style.display = 'none', 3500);
+    }
+
+    async function dbLoadExec() {
+      const { data, error } = await _sb.from('exec_history').select('*').order('created_at', { ascending: false });
+      if (error) return;
+      EXEC_DATA = (data || []).map(r => ({
+        id: r.id, applicantId: r.applicant_id,
+        name: r.name, pos: r.pos, src: r.src || '', phone: r.phone || '', date: r.date || '',
+        hrNote: r.hr_note || '', hrBy: r.hr_by || '', hrRes: r.hr_res || '', hrResDet: r.hr_res_det || '',
+        adm1: r.adm1 || '', adm1By: r.adm1_by || '',
+        adm2: r.adm2 || '', adm2By: r.adm2_by || '',
+        adm3Note: r.adm3_note || '', adm3By: r.adm3_by || '',
+        intDate: r.int_date || '', intTime: r.int_time || '', intBy: r.int_by || '',
+        salary: r.salary || '', startDate: r.start_date || '', employmentType: r.employment_type || '',
+        benefits: r.benefits || '', offerResult: r.offer_result || '',
+        offerSentAt: r.offer_sent_at || '', offerChannel: r.offer_channel || '',
+        offerEmail: r.offer_email || '', candidateRespondedAt: r.candidate_responded_at || '',
+        resumeUrl: r.resume_url || '',
+        closeR: r.close_r || '', closed: r.closed || false,
+        step: r.step || 1,
+      }));
+    }
+
+    function askConfirm(message, opts = {}) {
+      return new Promise(resolve => {
+        document.getElementById('confirm-title').textContent = opts.title || 'ยืนยันการดำเนินการ';
+        document.getElementById('confirm-msg').innerHTML = message;
+        const okBtn = document.getElementById('confirm-ok-btn');
+        const cancelBtn = document.getElementById('confirm-cancel-btn');
+        const icon = document.getElementById('confirm-icon');
+        okBtn.textContent = opts.okText || 'ยืนยัน';
+        okBtn.className = 'btn ' + (opts.danger ? 'btn-r' : 'btn-g');
+        icon.className = 'confirm-icon' + (opts.danger ? ' danger' : '');
+        icon.innerHTML = `<i class="ti ${opts.danger ? 'ti-alert-triangle' : 'ti-circle-check'}"></i>`;
+        document.getElementById('confirm-overlay').style.display = 'flex';
+        const cleanup = (result) => {
+          document.getElementById('confirm-overlay').style.display = 'none';
+          okBtn.onclick = null; cancelBtn.onclick = null;
+          resolve(result);
+        };
+        okBtn.onclick = () => cleanup(true);
+        cancelBtn.onclick = () => cleanup(false);
+      });
+    }
+
+    async function syncToExec(a) {
+      // ตรวจว่ามีอยู่แล้วไหม
+      const { data: existing } = await _sb.from('exec_history').select('id').eq('applicant_id', a.id).maybeSingle();
+      const payload = {
+        applicant_id: a.id, name: a.name, pos: a.pos, src: a.src, phone: a.phone, date: a.date,
+        hr_note: a.hrNote, hr_by: a.hrBy, hr_res: a.hrRes, hr_res_det: a.hrResDet,
+        adm1: a.adm1, adm1_by: a.adm1By, adm2: a.adm2, adm2_by: a.adm2By,
+        adm3_note: a.adm3Note, adm3_by: a.adm3By,
+        int_date: a.intDate, int_time: a.intTime, int_by: a.intBy,
+        salary: a.salary, start_date: a.startDate, employment_type: a.employmentType,
+        benefits: a.benefits, offer_result: a.offerResult,
+        offer_sent_at: a.offerSentAt, offer_channel: a.offerChannel,
+        offer_email: a.offerEmail, candidate_responded_at: a.candidateRespondedAt,
+        resume_url: a.resumeUrl, close_r: a.closeR, closed: a.closed, step: a.step,
+      };
+      if (existing) {
+        await _sb.from('exec_history').update(payload).eq('id', existing.id);
+      } else {
+        await _sb.from('exec_history').insert(payload);
+      }
+      await dbLoadExec();
     }
 
     // ── DB helpers ───────────────────────────────────────────
     async function dbLoad() {
       const { data, error } = await _sb.from('applicants').select('*').order('created_at', { ascending: false });
       if (error) { showToast('โหลดข้อมูลไม่สำเร็จ', true); return; }
-      // map snake_case → camelCase
-      DATA = (data || []).map(mapRow);
+      const all = (data || []).map(mapRow);
+      if (currentUser?.role === 'admin') {
+        DATA = all;              // ← admin เห็นหมด รวมถึงที่ deleted:true
+      } else {
+        DATA = all.filter(a => !a.deleted);   // ← HR กรอง deleted ออก
+      }
     }
 
     function mapRow(r) {
@@ -2380,6 +2630,11 @@
         offerChannel: r.offer_channel || 'Email',
         offerSentNote: r.offer_sent_note || '',
         candidateRespondedAt: r.candidate_responded_at || '',
+        deleted: r.deleted === true,
+        deletedAdmin: r.deleted_admin === true,
+        hrSalary: r.hr_salary || '',
+        execInterested: r.exec_interested === true,
+        hrDraft: r.hr_draft || '',
       };
     }
 
@@ -2388,7 +2643,7 @@
       const round2 = DATA.filter(a => a.step === 6 && !a.closed);
       const round3 = DATA.filter(a => a.step === 8 && !a.closed);
       const el = document.getElementById('exec-list');
-      if (!round1.length && !round2.length && !round3.length) {
+      if (!round1.length && !round2.length) {
         el.innerHTML = '<div class="empty"><i class="ti ti-check"></i>ไม่มีรายการรออนุมัติ</div>';
         return;
       }
@@ -2430,26 +2685,6 @@
       </div>`).join('');
       }
 
-      if (round3.length) {
-        html += `<div class="exec-sep"></div><div class="exec-section-title">อนุมัติ Offer (${round3.length} ราย)</div>`;
-        html += round3.map(a => `
-      <div class="exec-card">
-        <div class="exec-top">
-          <div><div class="exec-name">${a.name}</div><div class="exec-pos">${a.pos} · ${a.src || '-'} · ${a.date}</div></div>
-          <span class="rb rb2">Offer</span>
-        </div>
-        <div class="exec-note">
-          <b>ตำแหน่ง:</b> ${a.pos} · <b>เงินเดือน:</b> ${a.salary} บาท<br>
-          <b>เริ่มงาน:</b> ${a.startDate} · <b>รูปแบบ:</b> ${a.employmentType || 'พนักงานประจำ'}
-        </div>
-        <textarea class="tl-in" id="adm3-ta-${a.id}" placeholder="ความเห็น (ถ้ามี)" style="margin-bottom:8px"></textarea>
-        <div class="exec-acts">
-          <button class="btn btn-r" onclick="doClose(${a.id},'ผู้บริหารไม่อนุมัติ Offer')">ไม่อนุมัติ</button>
-          <button class="btn btn-g" onclick="doAdm3FromExec(${a.id})">อนุมัติ Offer ✓</button>
-        </div>
-      </div>`).join('');
-      }
-
       el.innerHTML = html;
     }
 
@@ -2481,6 +2716,12 @@
         offerSentAt: 'offer_sent_at', offerSentBy: 'offer_sent_by', offerResult: 'offer_result',
         offerEmail: 'offer_email', offerChannel: 'offer_channel', offerSentNote: 'offer_sent_note',
         candidateRespondedAt: 'candidate_responded_at',
+        deleted: 'deleted',
+        deletedAdmin: 'deleted_admin',
+        hrSalary: 'hr_salary',
+        execInterested: 'exec_interested',
+        name: 'name',
+        hrDraft: 'hr_draft',
       };
       const payload = {};
       for (const [k, v] of Object.entries(fields)) {
@@ -2515,6 +2756,7 @@
         document.body.classList.add('role-admin');
       }
       await dbLoad();
+      await dbLoadExec();
       navTo(rc.pages[0]);
       renderList();
       setupRealtime();
@@ -2558,11 +2800,15 @@
         const c = col(i);
         const d = document.createElement('div');
         d.className = 'ai' + (selId === a.id ? ' on' : '');
-        const stepLabels = ['', 'อัปโหลดแล้ว', 'HR คัดกรอง', 'รอผู้บริหาร รอบ1', 'นัดสัมภาษณ์', 'บันทึกผลสัมภาษณ์', 'รอผู้บริหาร รอบ2', 'เตรียม Offer', 'รออนุมัติ Offer', 'รับเข้าทำงาน'];
-        const stepColors = ['', '#faeeda|#633806', '#e6f1fb|#0c447c', '#faeeda|#633806', '#e1f5ee|#085041', '#e6f1fb|#0c447c', '#faeeda|#633806', '#eaf3de|#27500a', '#faeeda|#633806', '#eaf3de|#27500a'];
-        const sc = a.closed ? '#fbeaf0|#72243e' : (stepColors[a.step] || '#f5f4f1|#888780');
+        const stepLabels = ['', 'อัปโหลดแล้ว', 'HR คัดกรอง', 'นัดสัมภาษณ์', 'นัดสัมภาษณ์', 'บันทึกผลสัมภาษณ์', 'รอผู้บริหาร รอบ2', 'เตรียม Offer', 'รออนุมัติ Offer', 'รับเข้าทำงาน'];
+        const stepColors = ['', '#faeeda|#633806', '#e6f1fb|#0c447c', '#e1f5ee|#085041', '#e1f5ee|#085041', '#e6f1fb|#0c447c', '#faeeda|#633806', '#eaf3de|#27500a', '#faeeda|#633806', '#eaf3de|#27500a'];
+        const sc = a.closed ? '#fbeaf0|#72243e' : (a.step >= 9 && a.offerResult === 'rejected' ? '#fbeaf0|#72243e' : (stepColors[a.step] || '#f5f4f1|#888780'));
         const [sbg, sfg] = sc.split('|');
-        const slbl = a.closed ? 'ปิดเคส' : (stepLabels[a.step] || '');
+        const slbl = a.closed ? 'ปิดเคส'
+          : a.step >= 9 && a.offerResult === 'accepted' ? 'รับเข้าทำงาน'
+            : a.step >= 9 && a.offerResult === 'rejected' ? 'ผู้สมัครปฏิเสธ Offer'
+              : a.step >= 9 ? 'รอผู้สมัครตอบรับ'
+                : (stepLabels[a.step] || '');
         d.innerHTML = `<div class="aiv" style="background:${c.bg};color:${c.fg}">${ini(a.name)}</div>
 <div style="flex:1;min-width:0">
   <div class="ai-name">${a.name}</div>
@@ -2578,27 +2824,49 @@
       listFilter = f;
       document.querySelectorAll('[data-lf]').forEach(c => c.classList.toggle('on', c.dataset.lf === f));
       filterA(document.querySelector('#list-col .sb input')?.value || '');
+      updateListCounts();
+    }
+
+    function updateListCounts() {
+      const base = DATA;
+      const counts = {
+        all: base.length,
+        s1: base.filter(a => !a.closed && a.step === 1).length,
+        s2: base.filter(a => !a.closed && a.step === 2).length,
+        s4: base.filter(a => !a.closed && a.step === 4).length,
+        s5: base.filter(a => !a.closed && a.step === 5).length,
+        s6: base.filter(a => !a.closed && a.step === 6).length,
+        s7: base.filter(a => !a.closed && a.step === 7).length,
+        waiting: base.filter(a => !a.closed && a.step >= 9 && !a.offerResult).length,
+        hired: base.filter(a => a.step >= 9 && a.offerResult === 'accepted' && !a.closed).length,
+        closed: base.filter(a => a.closed).length,
+      };
+      document.querySelectorAll('[data-lf]').forEach(c => {
+        const f = c.dataset.lf;
+        const n = counts[f] ?? 0;
+        c.textContent = c.textContent.replace(/\s*\(\d+\)$/, '') + (n > 0 ? ` (${n})` : '');
+      });
     }
 
     function filterA(q) {
       let items = DATA.filter(a => a.name.includes(q) || a.pos.includes(q));
       if (listFilter === 's1') items = items.filter(a => !a.closed && a.step === 1);
       if (listFilter === 's2') items = items.filter(a => !a.closed && a.step === 2);
-      if (listFilter === 's3') items = items.filter(a => !a.closed && a.step === 3);
-      if (listFilter === 's4') items = items.filter(a => !a.closed && a.step === 4);
+      if (listFilter === 's3') items = items.filter(a => !a.closed && a.step === -1); if (listFilter === 's4') items = items.filter(a => !a.closed && a.step === 4);
       if (listFilter === 's5') items = items.filter(a => !a.closed && a.step === 5);
       if (listFilter === 's6') items = items.filter(a => !a.closed && a.step === 6);
       if (listFilter === 's7') items = items.filter(a => !a.closed && a.step === 7);
-      if (listFilter === 's8') items = items.filter(a => !a.closed && a.step === 8);
-      if (listFilter === 'hired') items = items.filter(a => a.step >= 9 && !a.closed);
-      if (listFilter === 'hired') items = items.filter(a => a.step >= 8 && !a.closed);
+      if (listFilter === 'waiting') items = items.filter(a => !a.closed && a.step >= 9 && !a.offerResult); if (listFilter === 's8') items = items.filter(a => !a.closed && a.step === 8);
+      if (listFilter === 'hired') items = items.filter(a => a.step >= 9 && a.offerResult === 'accepted' && !a.closed);
       if (listFilter === 'closed') items = items.filter(a => a.closed);
       renderList(items);
     }
 
     function badgeHtml(a) {
       if (a.closed) return '<span class="badge b-no">ปิดเคส</span>';
-      if (a.step >= 9) return '<span class="badge b-hire">รับเข้าทำงาน</span>';
+      if (a.step >= 9 && a.offerResult === 'rejected') return '<span class="badge b-no">ผู้สมัครปฏิเสธ Offer</span>';
+      if (a.step >= 9 && a.offerResult === 'accepted') return '<span class="badge b-hire">รับเข้าทำงาน</span>';
+      if (a.step >= 9 && !a.offerResult) return '<span class="badge b-wait">รอผู้สมัครตอบรับ</span>';
       if (a.step >= 3) return '<span class="badge b-ok">กำลังดำเนินการ</span>';
       const hasDraft = localStorage.getItem('hr-draft-' + a.id);
       if (hasDraft) return '<span class="badge b-ok">กำลังดำเนินการ</span>';
@@ -2613,8 +2881,8 @@
       let tlHtml = '';
 
       STEPS.forEach((st, idx) => {
-        const done = !a.closed && a.step > st.s;
-        const cur = !a.closed && a.step === st.s;
+        const done = a.step > st.s;
+        const cur = !a.closed && a.step === st.s
         let ic = 'ic-off', ico = 'ti-circle';
         if (done) { ic = 'ic-done'; ico = 'ti-check'; }
         else if (cur) { ic = 'ic-cur'; ico = 'ti-clock'; }
@@ -2637,17 +2905,18 @@ ${a.resumeUrl ? `<a href="${a.resumeUrl}" target="_blank" class="btn btn-downloa
               body = `${a.hrNote ? `<div class="tl-note">${a.hrNote}</div>` : ''}
 ${a.hrBy ? `<div class="tl-sub" style="margin-top:5px"><i class="ti ti-user-check" style="font-size:11px;margin-right:3px;color:#1d9e75"></i>ตรวจโดย ${a.hrBy}</div>` : ''}`;
             } else {
-              const draft = a.hrNote || localStorage.getItem('hr-draft-' + a.id) || '';
+              const draft = a.hrNote || a.hrDraft || '';
               body = `<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:6px">
   <label style="font-size:11.5px;color:#5f5e5a;font-weight:500"><i class="ti ti-user-check" style="font-size:12px;margin-right:3px;vertical-align:-1px;color:#1d9e75"></i>ชื่อผู้ตรวจ</label>
   <input type="text" id="hr-checker" value="${currentUser?.name || ''}" placeholder="ชื่อผู้ตรวจ" style="padding:7px 9px;border:1px solid #d3d1c7;border-radius:7px;font-size:12px;font-family:inherit;color:#2c2c2a;outline:none;background:#fff;transition:border-color .12s" onfocus="this.style.borderColor='#1d9e75'" onblur="this.style.borderColor='#d3d1c7'">
 </div>
-<textarea class="tl-in" id="hr-ta" placeholder="ประเมินเรซูเม่ · บันทึกความเห็น" oninput="localStorage.setItem('hr-draft-${a.id}',this.value)">${draft}</textarea>
+<textarea class="tl-in" id="hr-ta" placeholder="ประเมินเรซูเม่ · บันทึกความเห็น" oninput="(function(v){const a=getA(${a.id});if(a)a.hrDraft=v;})(this.value)"
+>${draft}</textarea>
 <div style="font-size:11px;color:#aaa;margin-top:3px">ร่างถูกบันทึกอัตโนมัติ</div>
 <div class="acts">
   <button class="btn btn-r" onclick="doClose(${a.id},'ไม่ผ่าน HR')">ไม่ผ่าน</button>
-  <button class="btn" onclick="localStorage.setItem('hr-draft-${a.id}',document.getElementById('hr-ta').value);showToast('บันทึกร่างแล้ว');document.querySelector('.dh .badge').outerHTML='<span class=\'badge b-ok\'>กำลังดำเนินการ</span>'"><i class="ti ti-device-floppy" style="font-size:12px;margin-right:3px"></i>บันทึกร่าง</button>
-  <button class="btn btn-g" onclick="localStorage.removeItem('hr-draft-${a.id}');doHR(${a.id})">ส่งผู้บริหาร ✓</button>
+<button class="btn" onclick="saveHRDraft(${a.id})"><i class="ti ti-device-floppy" style="font-size:12px;margin-right:3px"></i>บันทึกร่าง</button>
+<button class="btn btn-g" onclick="localStorage.removeItem('hr-draft-${a.id}');doHR(${a.id})">ส่งนัดสัมภาษณ์ ✓</button>
 </div>`;
             }
           } else if (st.k === 'adm1') {
@@ -2683,43 +2952,66 @@ ${a.adm1By ? `<div class="tl-sub" style="margin-top:5px">โดย ${a.adm1By}</
             }
           } else if (st.k === 'hrres') {
             if (done) {
-              body = `<div class="tl-note">${a.hrRes === 'pass' ? '✓ ผ่าน' : '✗ ไม่ผ่าน'} — ${a.hrResDet}</div>`;
+              body = `<div class="tl-note">${a.hrRes === 'pass' ? '✓ ผ่าน' : '✗ ไม่ผ่าน'} — ${a.hrResDet}</div>
+${a.hrSalary ? `<div class="tl-note" style="margin-top:5px">💰 เงินเดือนที่ HR ตกลง: <b>${a.hrSalary} บาท</b></div>` : ''}
+${a.salary ? `<div class="tl-note" style="margin-top:5px;background:#eaf3de;border-color:#cbe6da;color:#27500a">✓ เงินเดือนที่ผู้บริหารเสนอ: <b>${a.salary} บาท</b></div>` : ''}`;
             } else {
-              body = `<textarea class="tl-in" id="hrres-ta" placeholder="รายละเอียด · ผ่าน/ไม่ผ่าน · เหตุผล">${a.hrResDet}</textarea>
-  <div class="acts">
-    <button class="btn btn-r" onclick="doHRRes(${a.id},'fail')">ไม่ผ่าน</button>
-    <button class="btn btn-g" onclick="doHRRes(${a.id},'pass')">ผ่าน → ส่งผู้บริหาร ✓</button>
-  </div>`;
+              body = `${a.adm2 && !a.adm2By ? `<div class="tl-note" style="color:#633806;background:#faeeda;border-color:#f0d090;margin-bottom:8px"><b>↩ ผู้บริหารตีกลับ:</b> ${a.adm2}</div>` : ''}
+<textarea class="tl-in" id="hrres-ta" placeholder="รายละเอียด · ผ่าน/ไม่ผ่าน · เหตุผล">${a.hrResDet}</textarea>
+<div style="margin-top:7px">
+  <label style="font-size:11.5px;color:#5f5e5a;font-weight:500;display:block;margin-bottom:4px">
+    <i class="ti ti-coin" style="font-size:12px;margin-right:3px;color:#1d9e75;vertical-align:-1px"></i>
+    เงินเดือนที่ HR ตกลงกับผู้สมัคร (บาท)
+  </label>
+  <input type="text" id="hrres-salary" placeholder="เช่น 25000" value="${a.hrSalary || ''}"
+    style="width:100%;padding:7px 9px;border:1px solid #d3d1c7;border-radius:7px;font-size:12px;font-family:inherit;color:#2c2c2a;outline:none;background:#fff">
+</div>
+<div class="acts">
+  <button class="btn btn-r" onclick="doHRRes(${a.id},'fail')">ไม่ผ่าน</button>
+  <button class="btn btn-g" onclick="doHRRes(${a.id},'pass')">ผ่าน → ส่งผู้บริหาร ✓</button>
+</div>`;
             }
           } else if (st.k === 'adm2') {
             if (done) {
               body = `${a.adm2 ? `<div class="tl-note">${a.adm2}</div>` : ''}
 ${a.adm2By ? `<div class="tl-sub" style="margin-top:5px">โดย ${a.adm2By}</div>` : ''}`;
-            } else if (currentUser.role === 'admin') {
-              body = `<textarea class="tl-in" id="adm2-ta" placeholder="เห็นเรซูเม่ + ผลสัมภาษณ์จาก HR">${a.adm2}</textarea>
-  <div class="adm2-acts acts">
-    <button class="btn btn-r" onclick="doClose(${a.id},'ผู้บริหารไม่อนุมัติ รอบ 2')">ไม่อนุมัติ</button>
-    <button class="btn btn-g" onclick="doAdm2(${a.id})">อนุมัติ ✓</button>
-  </div>`;
+            } else if (currentUser.role === 'admin' || currentUser.role === 'hr') {
+              body = `<div class="tl-note" style="margin-bottom:8px;background:#e1f5ee;border-color:#cbe6da;color:#085041">
+  💰 เงินเดือนที่ HR ตกลงกับผู้สมัคร: <b>${a.hrSalary ? a.hrSalary + ' บาท' : '(ไม่ได้ระบุ)'}</b>
+</div>
+<textarea class="tl-in" id="adm2-ta" placeholder="ความเห็น / เงื่อนไข">${a.adm2}</textarea>
+<div style="margin-top:7px">
+  <label style="font-size:11.5px;color:#5f5e5a;font-weight:500;display:block;margin-bottom:4px">
+    <i class="ti ti-coin" style="font-size:12px;margin-right:3px;color:#ba7517;vertical-align:-1px"></i>
+    เงินเดือนที่ผู้บริหารอนุมัติ (บาท)
+  </label>
+  <input type="text" id="adm2-salary" placeholder="เช่น 25000" value="${a.salary || a.hrSalary || ''}"
+    style="width:100%;padding:7px 9px;border:1px solid #d3d1c7;border-radius:7px;font-size:12px;font-family:inherit;color:#2c2c2a;outline:none;background:#fff;pointer-events:auto!important;opacity:1!important">
+</div>
+<div class="adm2-acts acts">
+  <button class="btn btn-r" onclick="doClose(${a.id},'ผู้บริหารไม่อนุมัติ รอบ 2')">ไม่อนุมัติ</button>
+  <button class="btn btn-g" onclick="doAdm2(${a.id})">อนุมัติ ✓</button>
+</div>`;
             } else {
               body = `<div class="tl-note" style="color:#ba7517;background:#faeeda;border-color:#f0d090">⏳ รอผู้บริหารพิจารณา</div>`;
             }
           } else if (st.k === 'offer') {
             if (done) {
-              body = `<div class="tl-note">ตำแหน่ง: ${a.pos} · เงินเดือน: ${a.salary} บาท · เริ่มงาน: ${a.startDate} · ${a.employmentType || 'พนักงานประจำ'}</div>`;
+              body = `<div class="tl-note">ตำแหน่ง: ${a.pos} · เงินเดือน: ${a.salary} บาท · เริ่มงาน: ${a.startDate} · ${a.employmentType || 'พนักงานประจำ'}</div>${a.adm3Note && !a.adm3By ? `<div class="tl-note" style="color:#72243e;background:#fbeaf0;border-color:#f4c0d1;margin-top:6px">↩ ผู้บริหารส่งกลับแก้ไข: ${a.adm3Note}</div>` : ''}`;
             } else {
-              body = `<div class="tl-in-row3">
+              body = `${a.adm3Note && !a.adm3By ? `<div class="tl-note" style="color:#72243e;background:#fbeaf0;border-color:#f4c0d1;margin-bottom:10px"><b>↩ ผู้บริหารส่งกลับ:</b> ${a.adm3Note}</div>` : ''}
+          <div class="tl-in-row3">
             <input type="text" id="of-pos" placeholder="ตำแหน่ง" value="${a.pos}">
-            <input type="text" id="of-sal" placeholder="เงินเดือน (บาท)">
-            <input type="date" id="of-st">
+            <input type="text" id="of-sal" placeholder="เงินเดือน (บาท)" value="${a.salary || ''}">
+            <input type="date" id="of-st" value="${a.startDate ? '' : ''}">
           </div>
           <div style="margin-top:7px">
             <select id="of-emp" style="width:100%;padding:7px 9px;border:1px solid #d3d1c7;border-radius:7px;font-size:12px;font-family:inherit;color:#2c2c2a;background:#fff;outline:none">
-              <option value="พนักงานประจำ">พนักงานประจำ</option>
-              <option value="สัญญาจ้าง">สัญญาจ้าง</option>
+              <option value="พนักงานประจำ" ${(a.employmentType || 'พนักงานประจำ') === 'พนักงานประจำ' ? 'selected' : ''}>พนักงานประจำ</option>
+              <option value="สัญญาจ้าง" ${a.employmentType === 'สัญญาจ้าง' ? 'selected' : ''}>สัญญาจ้าง</option>
             </select>
           </div>
-          <div class="acts"><button class="btn btn-g" onclick="doOffer(${a.id})">ส่งให้ผู้บริหารอนุมัติ Offer ✓</button></div>`;
+            <div class="acts"><button class="btn btn-g" onclick="doOffer(${a.id})">บันทึก Offer ✓</button></div>`;
             }
           } else if (st.k === 'adm3') {
             if (done) {
@@ -2736,7 +3028,10 @@ ${a.adm3By ? `<div class="tl-sub" style="margin-top:5px">โดย ${a.adm3By}</
             <button class="btn btn-g" onclick="doAdm3(${a.id})">อนุมัติ Offer ✓</button>
           </div>`;
             } else {
-              body = `<div class="tl-note" style="color:#ba7517;background:#faeeda;border-color:#f0d090">⏳ รอผู้บริหารอนุมัติ Offer</div>`;
+              const wasReturned = a.adm3Note && !a.adm3By;
+              body = wasReturned
+                ? `<div class="tl-note" style="color:#72243e;background:#fbeaf0;border-color:#f4c0d1">↩ ผู้บริหารส่งกลับแก้ไข<br><span style="margin-top:4px;display:block">${a.adm3Note}</span></div>`
+                : `<div class="tl-note" style="color:#ba7517;background:#faeeda;border-color:#f0d090">⏳ รอผู้บริหารอนุมัติ Offer</div>`;
             }
           }
         }
@@ -2752,12 +3047,55 @@ ${a.adm3By ? `<div class="tl-sub" style="margin-top:5px">โดย ${a.adm3By}</
         tlHtml += `<div class="tli">
       <div class="tl-ic ic-no"><i class="ti ti-x" style="font-size:11px"></i></div>
       <div class="tl-body"><div class="tl-lbl" style="color:#72243e">ปิดเคส</div>
-      <div class="tl-note err">${a.closeR}</div></div>
+      <div class="tl-note err">${a.closeR}</div>
+      ${a.adm3Note ? `<div class="tl-note err" style="margin-top:5px"><b>โน้ตผู้บริหาร:</b> ${a.adm3Note}</div>` : ''}
+      </div>
+    </div>`;
+      }
+
+      // ── ขั้นตอนหลัง adm3 (เฉพาะ step >= 9) ──
+      if (!a.closed && a.step >= 9) {
+        const sentValid = !!a.offerSentAt;
+        const offerResult = a.offerResult;
+
+        // ส่ง Offer Letter
+        let sentIc = sentValid ? 'ic-done' : 'ic-cur';
+        let sentIco = sentValid ? 'ti-check' : 'ti-clock';
+        let sentBody = sentValid
+          ? `<div class="tl-sub">${a.offerSentAt} · ${a.offerSentBy || ''} · ${a.offerChannel || 'Email'}</div>${a.offerEmail ? `<div class="tl-note" style="margin-top:4px">📧 ${a.offerEmail}</div>` : ''}${a.offerSentNote ? `<div class="tl-note" style="margin-top:4px">${a.offerSentNote}</div>` : ''}`
+          : `<div class="tl-sub">รอดำเนินการ</div>`;
+        tlHtml += `<div class="tli"><div class="tl-vl"></div>
+      <div class="tl-ic ${sentIc}"><i class="ti ${sentIco}" style="font-size:11px"></i></div>
+      <div class="tl-body"><div class="tl-lbl">ส่ง Offer Letter</div>${sentBody}</div>
+    </div>`;
+
+        // รอผู้สมัครตอบรับ
+        let respIc = 'ic-off', respIco = 'ti-circle';
+        let respLbl = 'รอผู้สมัครตอบรับ Offer';
+        let respBody = '';
+        if (offerResult === 'accepted') {
+          respIc = 'ic-done'; respIco = 'ti-check';
+          respBody = `<div class="tl-sub">${a.candidateRespondedAt || ''}</div>${a.offerNote ? `<div class="tl-note" style="margin-top:4px">${a.offerNote}</div>` : ''}<div class="of2-resp-result accepted" style="margin-top:6px"><i class="ti ti-circle-check"></i>ผู้สมัครตอบรับ Offer แล้ว</div>`;
+        } else if (offerResult === 'rejected') {
+          respIc = 'ic-no'; respIco = 'ti-x';
+          respBody = `<div class="tl-sub">${a.candidateRespondedAt || ''}</div>${a.offerNote ? `<div class="tl-note" style="margin-top:4px">${a.offerNote}</div>` : ''}<div class="of2-resp-result rejected" style="margin-top:6px"><i class="ti ti-circle-x"></i>ผู้สมัครปฏิเสธ Offer</div>`;
+        } else if (sentValid) {
+          respIc = 'ic-cur'; respIco = 'ti-clock';
+          respBody = `<div class="tl-sub">รอการยืนยัน</div>${a.offerNote ? `<div class="tl-note" style="margin-top:4px">${a.offerNote}</div>` : ''}`;
+        } else {
+          respBody = `<div class="tl-sub" style="color:#d3d1c7">รอส่ง Offer ก่อน</div>`;
+        }
+        tlHtml += `<div class="tli">
+      <div class="tl-ic ${respIc}"><i class="ti ${respIco}" style="font-size:11px"></i></div>
+      <div class="tl-body"><div class="tl-lbl ${respIc === 'ic-off' ? 'dim' : ''}">${respLbl}</div>${respBody}</div>
     </div>`;
       }
 
       dp.innerHTML = `
-    <div class="dh"><div class="dh-name">${a.name}</div><div style="display:flex;align-items:center;gap:8px">${badgeHtml(a)}<button style="padding:5px 11px;border-radius:7px;font-size:12px;font-family:inherit;cursor:pointer;border:1px solid #f4c0d1;background:#fbeaf0;color:#72243e;display:flex;align-items:center;gap:5px;pointer-events:auto!important;opacity:1!important" onclick="doDelete(${a.id})"><i class="ti ti-trash" style="font-size:13px"></i>ลบ</button></div></div>
+    <div class="dh"><div style="display:flex;align-items:center;gap:8px">
+      <div class="dh-name" id="dh-name-${a.id}">${a.name}</div>
+      ${currentUser?.role === 'hr' ? `<button style="padding:4px 9px;border-radius:7px;font-size:11px;font-family:inherit;cursor:pointer;border:1px solid #d3d1c7;background:#fff;color:#5f5e5a;display:flex;align-items:center;gap:4px" onclick="editName(${a.id})"><i class="ti ti-pencil" style="font-size:12px"></i>แก้ไข</button>` : ''}
+    </div><div style="display:flex;align-items:center;gap:8px">${resumeBtnHtml(a)}${badgeHtml(a)}${!a.closed ? `<button style="padding:5px 11px;border-radius:7px;font-size:12px;font-family:inherit;cursor:pointer;border:1px solid #f0d090;background:#faeeda;color:#633806;display:flex;align-items:center;gap:5px;pointer-events:auto!important;opacity:1!important" onclick="doWithdraw(${a.id})"><i class="ti ti-user-x" style="font-size:13px"></i>ผู้สมัครยกเลิกกระทันหัน</button>` : ''}${(a.closed || a.step >= 9) ? `<button style="padding:5px 11px;border-radius:7px;font-size:12px;font-family:inherit;cursor:pointer;border:1px solid #f4c0d1;background:#fbeaf0;color:#72243e;display:flex;align-items:center;gap:5px;pointer-events:auto!important;opacity:1!important" onclick="doDelete(${a.id})"><i class="ti ti-trash" style="font-size:13px"></i>ลบ</button>` : ''}</div></div>
 
     <div class="db">
       <div class="meta-card">
@@ -2778,6 +3116,10 @@ ${a.adm3By ? `<div class="tl-sub" style="margin-top:5px">โดย ${a.adm3By}</
     // ── ACTIONS (async, save to DB) ───────────────────────────
     async function rerender(id) {
       await dbLoad();
+      await dbLoadExec();
+      // sync ข้อมูลล่าสุดไปยัง exec_history
+      const _a = getA(id);
+      if (_a) await syncToExec(_a);
       const a = getA(id);
       if (a) renderDetail(a);
       renderList();
@@ -2786,35 +3128,100 @@ ${a.adm3By ? `<div class="tl-sub" style="margin-top:5px">โดย ${a.adm3By}</
       renderOffer();
       renderRep();
       renderExec();
+      renderHistory();
+      renderOfferAdm();
+      renderExecInterested();
+    }
+
+    async function editName(id) {
+      const a = getA(id);
+      if (!a) return;
+      const el = document.getElementById('dh-name-' + id);
+      if (!el) return;
+      el.innerHTML = `<input type="text" value="${a.name}" id="edit-name-input" style="padding:5px 9px;border:1.5px solid #1d9e75;border-radius:7px;font-size:14px;font-weight:600;font-family:inherit;color:#2c2c2a;outline:none;background:#fff;width:180px">
+        <button style="padding:5px 10px;border-radius:7px;font-size:12px;font-family:inherit;cursor:pointer;background:#1d9e75;color:#fff;border:none;margin-left:5px" onclick="saveName(${id})">บันทึก</button>
+        <button style="padding:5px 10px;border-radius:7px;font-size:12px;font-family:inherit;cursor:pointer;background:#fff;color:#5f5e5a;border:1px solid #d3d1c7;margin-left:4px" onclick="renderDetail(getA(${id}))">ยกเลิก</button>`;
+      document.getElementById('edit-name-input')?.focus();
+    }
+
+    async function saveName(id) {
+      const newName = document.getElementById('edit-name-input')?.value.trim();
+      if (!newName) { showToast('กรุณากรอกชื่อ', true); return; }
+      const ok = await dbUpdate(id, { name: newName });
+      if (ok) { showToast('แก้ไขชื่อแล้ว'); await rerender(id); }
+    }
+
+    async function saveHRDraft(id) {
+      const note = document.getElementById('hr-ta')?.value || '';
+      const ok = await dbUpdate(id, { hrDraft: note });
+      if (ok) {
+        // อัพเดท local cache
+        const a = getA(id);
+        if (a) a.hrDraft = note;
+
+        // Re-render detail แล้ว restore ค่า textarea กลับทันที
+        if (a) {
+          const savedNote = note; // capture ก่อน re-render
+          renderDetail(a);
+          // หลัง renderDetail สร้าง textarea ใหม่ → restore ค่าเดิมกลับ
+          const ta = document.getElementById('hr-ta');
+          if (ta) {
+            ta.value = savedNote;
+            // restore cursor ไว้ท้าย
+            ta.setSelectionRange(savedNote.length, savedNote.length);
+          }
+        }
+
+        // feedback บนปุ่ม (ต้อง query ใหม่หลัง re-render)
+        const btn = document.querySelector(`[onclick="saveHRDraft(${id})"]`);
+        if (btn) {
+          const orig = btn.innerHTML;
+          btn.innerHTML = '<i class="ti ti-check" style="font-size:12px;margin-right:3px"></i>บันทึกแล้ว ✓';
+          btn.style.color = '#1d9e75'; btn.style.borderColor = '#cbe6da';
+          setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; btn.style.borderColor = ''; }, 2000);
+        }
+      }
     }
 
     async function doUploadNext(id) {
+      const ok2 = await askConfirm('ยืนยันส่งให้ HR คัดกรอง?', { title: 'ส่ง HR คัดกรอง', okText: 'ส่งเลย' });
+      if (!ok2) return;
       const ok = await dbUpdate(id, { step: 2 });
       if (ok) { showToast('ส่ง HR คัดกรองแล้ว'); await rerender(id); }
       renderExec();
     }
 
-    async function doClose(id, r) {
-      const ok = await dbUpdate(id, { closed: true, closeR: r });
-      if (ok) { showToast('ปิดเคสแล้ว'); await rerender(id); }
-      renderExec();
-    }
     async function doHR(id) {
       const note = document.getElementById('hr-ta')?.value || '';
       const checker = document.getElementById('hr-checker')?.value.trim() || currentUser?.name || '';
-      const ok = await dbUpdate(id, { hrNote: note, step: 3, hrBy: checker });
-      if (ok) { showToast('ส่งผู้บริหารแล้ว'); await rerender(id); }
+      const confirmed = await askConfirm('ยืนยันส่งผู้สมัครนัดสัมภาษณ์?', { title: 'ส่งนัดสัมภาษณ์', okText: 'ส่งเลย' }); if (!confirmed) return;
+      const ok = await dbUpdate(id, { hrNote: note, hrDraft: '', step: 4, hrBy: checker });
+      if (ok) { showToast('ส่งนัดสัมภาษณ์แล้ว'); await rerender(id); }
       renderExec();
     }
+
     async function doAdm1(id) {
-      const note = document.getElementById('adm1-ta')?.value || '';
       if (currentUser?.role !== 'admin') return;
+      const confirmed = await askConfirm('ยืนยันอนุมัติ รอบ 1 และนัดสัมภาษณ์?', { title: 'อนุมัติ รอบ 1', okText: 'อนุมัติ' });
+      if (!confirmed) return;
+      const note = document.getElementById('adm1-ta')?.value || '';
       const ok = await dbUpdate(id, { adm1: note, step: 4, adm1By: currentUser.name });
       if (ok) { showToast('อนุมัติรอบ 1 แล้ว'); await rerender(id); }
       renderExec();
     }
 
+    async function doAdm1FromPage(id) {
+      const confirmed = await askConfirm('ยืนยันอนุมัติ รอบ 1?', { title: 'อนุมัติ รอบ 1', okText: 'อนุมัติ' });
+      if (!confirmed) return;
+      const note = document.getElementById('adm-note-' + id)?.value || '';
+      const ok = await dbUpdate(id, { adm1: note, step: 4, adm1By: currentUser.name });
+      if (ok) { showToast('อนุมัติรอบ 1 แล้ว'); await rerender(id); renderAdm(); }
+      renderExec();
+    }
+
     async function doInt(id) {
+      const confirmed = await askConfirm('ยืนยันบันทึกนัดสัมภาษณ์?', { title: 'บันทึกนัดสัมภาษณ์', okText: 'บันทึก' });
+      if (!confirmed) return;
       const d = document.getElementById('int-d')?.value || '';
       const h = document.getElementById('int-h')?.value || '09';
       const m = document.getElementById('int-m')?.value || '00';
@@ -2826,9 +3233,16 @@ ${a.adm3By ? `<div class="tl-sub" style="margin-top:5px">โดย ${a.adm3By}</
     }
 
     async function doHRRes(id, r) {
+      const label = r === 'pass' ? 'ผ่าน → ส่งผู้บริหารรอบ 2' : 'ไม่ผ่าน → ปิดเคส';
+      const confirmed = await askConfirm(
+        `ยืนยันบันทึกผลสัมภาษณ์: <b>${label}</b>?`,
+        { title: 'บันทึกผลสัมภาษณ์', okText: 'ยืนยัน', danger: r === 'fail' }
+      );
+      if (!confirmed) return;
       const det = document.getElementById('hrres-ta')?.value || '';
+      const sal = document.getElementById('hrres-salary')?.value || '';
       if (r === 'pass') {
-        const ok = await dbUpdate(id, { hrRes: r, hrResDet: det, step: 6 });
+        const ok = await dbUpdate(id, { hrRes: r, hrResDet: det, hrSalary: sal, step: 6 });
         if (ok) { showToast('ส่งผู้บริหารรอบ 2 แล้ว'); await rerender(id); }
       } else {
         const ok = await dbUpdate(id, { hrRes: r, hrResDet: det, closed: true, closeR: 'ไม่ผ่านการสัมภาษณ์ HR' });
@@ -2837,30 +3251,165 @@ ${a.adm3By ? `<div class="tl-sub" style="margin-top:5px">โดย ${a.adm3By}</
     }
 
     async function doAdm2(id) {
-      if (currentUser?.role !== 'admin') return;
+      if (currentUser?.role !== 'admin' && currentUser?.role !== 'hr') return;
+      const confirmed = await askConfirm('ยืนยันอนุมัติและเตรียม Offer?', { title: 'อนุมัติ', okText: 'อนุมัติ' });
+      if (!confirmed) return;
       const note = document.getElementById('adm2-ta')?.value || '';
-      const ok = await dbUpdate(id, { adm2: note, step: 7, adm2By: currentUser.name }); if (ok) { showToast('อนุมัติรอบ 2 แล้ว'); await rerender(id); }
+      const salEl = document.getElementById('adm2-salary');
+      const sal = salEl?.value || '';
+      const fields = { adm2: note, step: 7, adm2By: currentUser.name };
+      if (sal) fields.salary = sal;
+      const ok = await dbUpdate(id, fields);
+      if (ok) { showToast('อนุมัติรอบ 2 แล้ว'); await rerender(id); }
+      renderExec();
+    }
+
+    async function doAdm2Return(id) {
+      if (currentUser?.role !== 'admin' && currentUser?.role !== 'hr') return;
+      const confirmed = await askConfirm('ยืนยันตีกลับให้ HR แก้ไขข้อมูล?', { title: 'ตีกลับ HR', okText: 'ตีกลับ', danger: true });
+      if (!confirmed) return;
+      const note = document.getElementById('adm-note-' + id)?.value || '';
+      if (!note) { showToast('กรุณาระบุเหตุผลการตีกลับ', true); return; }
+      const ok = await dbUpdate(id, { step: 5, adm2: note, adm2By: '' });
+      if (ok) { showToast('ตีกลับให้ HR แล้ว'); await rerender(id); renderAdm(); }
+    }
+
+    async function doAdm2FromPage(id) {
+      const confirmed = await askConfirm('ยืนยันอนุมัติ?', {
+        title: 'อนุมัติ',
+        okText: 'อนุมัติ'
+      });
+      if (!confirmed) return;
+      const note = document.getElementById('adm-note-' + id)?.value || '';
+      const salEl = document.getElementById('adm2-salary-' + id);
+      const sal = salEl?.value || '';
+      const fields = { adm2: note, step: 7, adm2By: currentUser.name };
+      if (sal) fields.salary = sal;
+      const ok = await dbUpdate(id, fields);
+      if (ok) { showToast('อนุมัติรอบ 2 แล้ว'); await rerender(id); renderAdm(); }
       renderExec();
     }
 
     async function doOffer(id) {
+      const confirmed = await askConfirm('ยืนยันบันทึก Offer?', { title: 'บันทึก Offer', okText: 'ยืนยัน' });
+      if (!confirmed) return;
       const sal = document.getElementById('of-sal')?.value || '';
       const sd = document.getElementById('of-st')?.value || '';
       const emp = document.getElementById('of-emp')?.value || 'พนักงานประจำ';
-      const ok = await dbUpdate(id, { salary: sal, startDate: thDate(sd), employmentType: emp, step: 8 });
-      if (ok) { showToast('ส่งให้ผู้บริหารอนุมัติ Offer แล้ว'); await rerender(id); }
+      const ok = await dbUpdate(id, {
+        salary: sal, startDate: thDate(sd), employmentType: emp,
+        step: 9, adm3Note: null, adm3By: null
+      });
+      if (ok) { showToast('บันทึก Offer แล้ว'); await rerender(id); }
       renderExec();
     }
 
     async function doAdm3(id) {
       if (currentUser?.role !== 'admin') return;
+      const confirmed = await askConfirm('ยืนยันอนุมัติ Offer?', { title: 'อนุมัติ Offer', okText: 'อนุมัติ' });
+      if (!confirmed) return;
       const note = document.getElementById('adm3-ta')?.value || '';
       const ok = await dbUpdate(id, { adm3Note: note, step: 9, adm3By: currentUser.name });
       if (ok) { showToast('อนุมัติ Offer แล้ว'); await rerender(id); }
       renderExec();
     }
 
+    async function doOAApprove(id) {
+      if (currentUser?.role !== 'admin') return;
+      const confirmed = await askConfirm('ยืนยันอนุมัติ Offer?', { title: 'อนุมัติ Offer', okText: 'อนุมัติ' });
+      if (!confirmed) return;
+      const note = document.getElementById('oa-note-' + id)?.value || '';
+      const ok = await dbUpdate(id, { adm3Note: note, step: 9, adm3By: currentUser.name });
+      if (ok) { showToast('อนุมัติ Offer แล้ว'); await rerender(id); renderOfferAdm(); }
+    }
+
+    async function doOAReturn(id) {
+      if (currentUser?.role !== 'admin') return;
+      const confirmed = await askConfirm('ยืนยันส่งกลับให้ HR แก้ไข Offer?', { title: 'ส่งกลับแก้ไข', okText: 'ส่งกลับ', danger: true });
+      if (!confirmed) return;
+      const note = document.getElementById('oa-note-' + id)?.value || '';
+      const ok = await dbUpdate(id, { adm3Note: note, step: 7, adm3By: '' });
+      if (ok) {
+        showToast('ส่งกลับ HR แล้ว');
+        selOAId = null;
+        document.getElementById('offer-adm-detail').innerHTML =
+          '<div class="empty"><i class="ti ti-clipboard-check"></i>เลือกผู้สมัครเพื่อพิจารณา Offer</div>';
+        await rerender(id);
+        renderOfferAdm();
+      }
+    }
+
+    async function saveOfferRespNote(id) {
+      const note = document.getElementById('offer-resp-note-' + id)?.value || '';
+      const ok = await dbUpdate(id, { offerNote: note });
+      if (ok) showToast('บันทึกร่างแล้ว');
+    }
+
+    async function doSendOfferLetter(id) {
+      const channel = document.getElementById('of2-channel')?.value || 'Email';
+      const email = document.getElementById('of2-email')?.value.trim() || '';
+      const note = document.getElementById('of2-note')?.value || '';
+      if (channel === 'Email' && !email) { showToast('กรุณากรอก Email ผู้สมัคร', true); return; }
+      const confirmed = await askConfirm(
+        `ยืนยันบันทึกว่าส่ง Offer Letter ทาง <b>${channel}</b> แล้ว?`,
+        { title: 'ส่ง Offer Letter', okText: 'ยืนยัน' }
+      );
+      if (!confirmed) return;
+      const now = new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+      const ok = await dbUpdate(id, {
+        offerChannel: channel, offerEmail: email, offerSentNote: note,
+        offerSentAt: now, offerSentBy: currentUser?.name || '',
+      });
+      if (ok) {
+        showToast('บันทึกว่าส่ง Offer Letter แล้ว');
+        await dbLoad(); renderOffer();
+        const a = getA(id);
+        if (a) renderOfferDetail(a);
+      }
+    }
+
+    async function doOfferResponse(id, result) {
+      const label = result === 'accepted' ? 'ตอบรับ Offer' : 'ปฏิเสธ Offer';
+      const confirmed = await askConfirm(
+        `ยืนยันว่าผู้สมัคร <b>${label}</b>?`,
+        { title: 'บันทึกการตอบรับ', okText: 'ยืนยัน', danger: result === 'rejected' }
+      );
+      if (!confirmed) return;
+      const now = new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+      const ok = await dbUpdate(id, { offerResult: result, candidateRespondedAt: now });
+      if (ok) {
+        showToast(result === 'accepted' ? 'บันทึกว่าผู้สมัครตอบรับแล้ว' : 'บันทึกว่าผู้สมัครปฏิเสธแล้ว');
+        await dbLoad(); renderOffer();
+        const a = getA(id);
+        if (a) renderOfferDetail(a);
+        renderRep();
+      }
+    }
+    // ============ END JOB OFFER PAGE LOGIC ============
+
+    async function doClose(id, r) {
+      const confirmed = await askConfirm(
+        `ยืนยันปิดเคส: <b>${r}</b>?`,
+        { title: 'ปิดเคส', okText: 'ปิดเคส', danger: true }
+      );
+      if (!confirmed) return;
+      const note = document.getElementById('adm3-ta')?.value
+        || document.getElementById('oa-note-' + id)?.value
+        || document.getElementById('adm-note-' + id)?.value
+        || document.getElementById('adm1-ta')?.value
+        || '';
+      const fields = { closed: true, closeR: r, hrDraft: '' };
+      if (note) fields.adm3Note = note;
+      const ok = await dbUpdate(id, fields);
+      if (ok) { showToast('ปิดเคสแล้ว'); await rerender(id); }
+      renderExec();
+    }
+
     // ── UPLOAD ────────────────────────────────────────────────
+    function toggleOtherPos() {
+      const sel = document.getElementById('u-pos').value;
+      document.getElementById('u-pos-other-row').style.display = sel === 'อื่นๆ' ? 'flex' : 'none';
+    }
     function onFile(f) {
       if (!f) return;
       document.getElementById('dz').classList.add('has');
@@ -2875,14 +3424,19 @@ ${a.adm3By ? `<div class="tl-sub" style="margin-top:5px">โดย ${a.adm3By}</
     function resetUpload() {
       ['u-name', 'u-phone'].forEach(i => document.getElementById(i).value = '');
       ['u-pos', 'u-src'].forEach(i => document.getElementById(i).selectedIndex = 0);
+      document.getElementById('u-pos-other').value = '';
+      document.getElementById('u-pos-other-row').style.display = 'none';
       document.getElementById('dz').classList.remove('has');
       document.getElementById('dz-fn').textContent = '';
     }
 
     async function submitUpload() {
       const name = document.getElementById('u-name').value.trim();
-      const pos = document.getElementById('u-pos').value;
-      if (!name || !pos) { alert('กรุณากรอกชื่อและเลือกตำแหน่ง'); return; }
+      let pos = document.getElementById('u-pos').value;
+      if (pos === 'อื่นๆ') {
+        pos = document.getElementById('u-pos-other').value.trim();
+      }
+      if (!name || !pos) { alert('กรุณากรอกชื่อและระบุตำแหน่ง'); return; }
 
       // ── upload ไฟล์ก่อน ──
       let resumeUrl = '';
@@ -2909,11 +3463,21 @@ ${a.adm3By ? `<div class="tl-sub" style="margin-top:5px">โดย ${a.adm3By}</
         closed: false, close_r: ''
       });
       if (error) { showToast('บันทึกไม่สำเร็จ: ' + error.message, true); return; }
+      const savedName = name;
       resetUpload();
       showToast('บันทึกเรซูเม่สำเร็จ');
       await dbLoad();
+      selId = null;
+      document.getElementById('detail').innerHTML = '<div class="empty"><i class="ti ti-user-search"></i>เลือกผู้สมัครเพื่อดูรายละเอียด</div>';
       navTo('list');
-      renderList();
+      const newest = DATA.find(a => a.name === savedName);
+      if (newest) {
+        selId = newest.id;
+        renderList();
+        renderDetail(newest);
+      } else {
+        renderList();
+      }
     }
 
     // ── PAGE RENDERS ──────────────────────────────────────────
@@ -2954,8 +3518,7 @@ ${a.adm3By ? `<div class="tl-sub" style="margin-top:5px">โดย ${a.adm3By}</
     }
 
     function renderAdm() {
-      let pend = DATA.filter(a => (a.step === 3 || a.step === 6) && !a.closed);
-      if (admFilter === 'round1') pend = pend.filter(a => a.step === 3);
+      let pend = DATA.filter(a => a.step === 6 && !a.closed);
       if (admFilter === 'round2') pend = pend.filter(a => a.step === 6);
       const el = document.getElementById('adm-list');
       if (!pend.length) { el.innerHTML = '<div class="empty"><i class="ti ti-check"></i>ไม่มีรายการรอพิจารณา</div>'; return; }
@@ -2964,17 +3527,31 @@ ${a.adm3By ? `<div class="tl-sub" style="margin-top:5px">โดย ${a.adm3By}</
       <div class="adm-top">
         <div><div class="adm-name">${a.name}</div><div class="adm-pos">${a.pos} · ${a.date}</div></div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-          <span class="rb ${a.step === 3 ? 'rb1' : 'rb2'}">รอบ ${a.step === 3 ? 1 : 2}</span>
+          ${resumeBtnHtml(a)}
+          <span class="rb ${a.step === 3 ? 'rb1' : 'rb2'}">รอ</span>
           <span style="font-size:10px;color:#888780">${a.step === 3 ? 'อนุมัติสัมภาษณ์' : 'อนุมัติรับเข้าทำงาน'}</span>
         </div>
       </div>
 ${a.resumeUrl ? `<div style="margin-bottom:8px"><a href="${a.resumeUrl}" target="_blank" class="oa-resume-link"><i class="ti ti-download" style="font-size:14px"></i>ดาวน์โหลด Resume</a></div>` : ''}
       <div class="hr-note-box">${a.step === 3 ? (a.hrNote || '(ไม่มีความเห็น)') : (a.hrResDet || '(ไม่มีความเห็น)')}</div>
-<div class="adm-acts">
-  ${currentUser.role === 'admin' ? `
-    <button class="btn btn-r" style="pointer-events:auto!important;opacity:1!important" onclick="doDelete(${a.id})"><i class="ti ti-trash" style="font-size:13px"></i>ลบ</button>
-    <button class="btn btn-r" onclick="doClose(${a.id},'ผู้บริหารไม่อนุมัติ')">ไม่อนุมัติ</button>
-    <button class="btn btn-g" onclick="${a.step === 3 ? `doAdm1FromPage(${a.id})` : `doAdm2FromPage(${a.id})`}">อนุมัติ ✓</button>
+<div class="adm-acts" style="flex-direction:column;align-items:stretch">
+  ${(currentUser.role === 'admin' || currentUser.role === 'hr') ? `
+<textarea id="adm-note-${a.id}" placeholder="ความเห็น / โน้ต (ถ้ามี)" style="width:100%;padding:7px 9px;border:1px solid #d3d1c7;border-radius:7px;font-size:12px;font-family:inherit;color:#2c2c2a;resize:vertical;min-height:50px;outline:none;background:#fff;margin-bottom:8px;pointer-events:auto!important;opacity:1!important">${a.step === 3 ? (a.adm1 || '') : (a.adm2 || '')}</textarea>
+${a.step === 6 ? `
+<div style="margin-top:7px">
+  <label style="font-size:11.5px;color:#5f5e5a;font-weight:500;display:block;margin-bottom:4px">
+    💰 เงินเดือนที่ HR ตกลง: <b>${a.hrSalary || '(ไม่ได้ระบุ)'}</b>
+  </label>
+  <input type="text" id="adm2-salary-${a.id}" placeholder="เงินเดือนที่ผู้บริหารอนุมัติ (บาท)" 
+    value="${a.salary || a.hrSalary || ''}"
+    style="width:100%;padding:7px 9px;border:1px solid #d3d1c7;border-radius:7px;font-size:12px;font-family:inherit;color:#2c2c2a;outline:none;background:#fff;margin-bottom:8px;pointer-events:auto!important;opacity:1!important">
+</div>` : ''}
+<div style="display:flex;gap:7px;justify-content:flex-end">
+  <button class="btn btn-r" style="pointer-events:auto!important;opacity:1!important" onclick="doClose(${a.id},'ผู้บริหารไม่อนุมัติ')">ไม่อนุมัติ</button>
+  <button class="btn" style="pointer-events:auto!important;opacity:1!important;background:#faeeda;color:#633806;border-color:#f0d090" onclick="doAdm2Return(${a.id})"><i class="ti ti-arrow-back-up" style="font-size:12px;margin-right:3px"></i>ตีกลับ HR</button>
+  <button class="btn" style="pointer-events:auto!important;opacity:1!important" onclick="saveAdmDraft(${a.id},${a.step})"><i class="ti ti-device-floppy" style="font-size:12px;margin-right:3px"></i>บันทึกร่าง</button>
+  <button class="btn btn-g" style="pointer-events:auto!important;opacity:1!important" onclick="${a.step === 3 ? `doAdm1FromPage(${a.id})` : `doAdm2FromPage(${a.id})`}">อนุมัติ ✓</button>
+</div>
   ` : `
     <div class="tl-note" style="color:#ba7517;background:#faeeda;border-color:#f0d090">⏳ รอผู้บริหารพิจารณา</div>
   `}
@@ -2982,15 +3559,11 @@ ${a.resumeUrl ? `<div style="margin-bottom:8px"><a href="${a.resumeUrl}" target=
     </div>`).join('');
     }
 
-    async function doAdm1FromPage(id) {
-      const ok = await dbUpdate(id, { step: 4 });
-      if (ok) { showToast('อนุมัติรอบ 1 แล้ว'); await rerender(id); renderAdm(); }
-      renderExec();
-    }
-    async function doAdm2FromPage(id) {
-      const ok = await dbUpdate(id, { step: 7 });
-      if (ok) { showToast('อนุมัติรอบ 2 แล้ว'); await rerender(id); renderAdm(); }
-      renderExec();
+    async function saveAdmDraft(id, step) {
+      const note = document.getElementById('adm-note-' + id)?.value || '';
+      const field = step === 3 ? { adm1: note } : { adm2: note };
+      const ok = await dbUpdate(id, field);
+      if (ok) showToast('บันทึกร่างแล้ว');
     }
 
     // ============ JOB OFFER PAGE LOGIC (redesigned) ============
@@ -3078,24 +3651,28 @@ ${a.resumeUrl ? `<div style="margin-bottom:8px"><a href="${a.resumeUrl}" target=
 
       // ── timeline ──
       let tlItems = [];
-      tlItems.push({ done: true, lbl: `อนุมัติ Offer จากผู้บริหาร`, sub: `${a.date} · ${a.adm2By || 'ผู้บริหาร'}` });
+      tlItems.push({ done: true, lbl: `HR เตรียม Offer`, sub: `${a.date} · ${a.adm2By || ''}` });
       const sentValid = !!a.offerSentAt; if (sentValid) {
-        tlItems.push({ done: true, lbl: `ส่ง Offer Letter แล้ว (${a.offerChannel || 'Email'})`, sub: `${a.offerSentAt} · ${a.offerSentBy || currentUser?.name || ''}` });
+        const sentNoteHtml = [
+          a.offerEmail ? `<span style="color:#0c447c">📧 ${a.offerEmail}</span>` : '',
+          a.offerSentNote || ''
+        ].filter(Boolean).join('<br>');
+        tlItems.push({ done: true, lbl: `ส่ง Offer Letter แล้ว (${a.offerChannel || 'Email'})`, sub: `${a.offerSentAt} · ${a.offerSentBy || currentUser?.name || ''}`, extra: sentNoteHtml ? `<div class="tl-note" style="margin-top:5px">${sentNoteHtml}</div>` : '' });
       } else {
         tlItems.push({ cur: true, lbl: 'ส่ง Offer Letter', sub: 'รอดำเนินการ' });
       }
       if (status === 'accepted') {
-        tlItems.push({ done: true, lbl: 'ผู้สมัครตอบรับ Offer', sub: a.candidateRespondedAt ? `${a.candidateRespondedAt} · ยืนยันแล้ว` : 'ยืนยันแล้ว', extra: `<div class="of2-resp-result accepted" style="margin-top:6px"><i class="ti ti-circle-check"></i>ผู้สมัครตอบรับ Offer แล้ว</div>` });
+        tlItems.push({ done: true, lbl: 'ผู้สมัครตอบรับ Offer', sub: a.candidateRespondedAt ? `${a.candidateRespondedAt} · ยืนยันแล้ว` : 'ยืนยันแล้ว', extra: `${a.offerNote ? `<div class="tl-note" style="margin-top:5px">${a.offerNote}</div>` : ''}<div class="of2-resp-result accepted" style="margin-top:6px"><i class="ti ti-circle-check"></i>ผู้สมัครตอบรับ Offer แล้ว</div>` });
       } else if (status === 'rejected') {
-        tlItems.push({ no: true, lbl: 'ผู้สมัครปฏิเสธ Offer', sub: a.candidateRespondedAt || '', extra: `<div class="of2-resp-result rejected" style="margin-top:6px"><i class="ti ti-circle-x"></i>ผู้สมัครปฏิเสธ Offer</div>` });
+        tlItems.push({ no: true, lbl: 'ผู้สมัครปฏิเสธ Offer', sub: a.candidateRespondedAt || '', extra: `${a.offerNote ? `<div class="tl-note" style="margin-top:5px">${a.offerNote}</div>` : ''}<div class="of2-resp-result rejected" style="margin-top:6px"><i class="ti ti-circle-x"></i>ผู้สมัครปฏิเสธ Offer</div>` });
       } else {
-        const respBtns = sentValid
-          ? `<div class="of2-resp-row" style="margin-top:8px">
-              <button class="of2-resp-btn of2-resp-accept" onclick="doOfferResponse(${a.id},'accepted')"><i class="ti ti-circle-check"></i>ผู้สมัครรับ Offer</button>
-              <button class="of2-resp-btn of2-resp-reject" onclick="doOfferResponse(${a.id},'rejected')"><i class="ti ti-circle-x"></i>ผู้สมัครปฏิเสธ</button>
-            </div>`
-          : `<div class="tl-note" style="color:#ba7517;background:#faeeda;border-color:#f0d090;margin-top:6px">⏳ กรุณาส่ง Offer Letter ก่อน</div>`;
-        tlItems.push({ off: !sentValid, cur: sentValid, lbl: 'รอผู้สมัครตอบรับ Offer', sub: sentValid ? 'รอการยืนยัน' : 'รอส่ง Offer ก่อน', extra: respBtns });
+        const respBtns = `<div class="of2-resp-row" style="margin-top:8px">
+          <button class="of2-resp-btn of2-resp-accept" onclick="doOfferResponse(${a.id},'accepted')"><i class="ti ti-circle-check"></i>ผู้สมัครรับ Offer</button>
+          <button class="of2-resp-btn of2-resp-reject" onclick="doOfferResponse(${a.id},'rejected')"><i class="ti ti-circle-x"></i>ผู้สมัครปฏิเสธ</button>
+        </div>`;
+        const respNote = `<textarea id="offer-resp-note-${a.id}" placeholder="โน้ตระหว่างรอ เช่น โทรติดตามแล้ว รอตอบกลับ..." style="width:100%;padding:7px 9px;border:1px solid #d3d1c7;border-radius:7px;font-size:12px;font-family:inherit;color:#2c2c2a;resize:vertical;min-height:50px;outline:none;background:#fff;margin-top:8px;margin-bottom:6px">${a.offerNote || ''}</textarea><div style="display:flex;justify-content:flex-end;margin-bottom:8px"><button style="padding:6px 12px;background:#fff;color:#5f5e5a;border:1px solid #d3d1c7;border-radius:7px;font-size:12px;font-family:inherit;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:5px" onclick="saveOfferRespNote(${a.id})"><i class="ti ti-device-floppy" style="font-size:13px"></i>บันทึกร่าง</button></div>`;
+        const notSentMsg = `<div class="tl-note" style="color:#ba7517;background:#faeeda;border-color:#f0d090;margin-top:6px">⏳ กรุณาส่ง Offer Letter ก่อน</div>`;
+        tlItems.push({ off: !sentValid, cur: sentValid, lbl: 'รอผู้สมัครตอบรับ Offer', sub: sentValid ? 'รอการยืนยัน' : 'รอส่ง Offer ก่อน', extra: sentValid ? respNote + respBtns : notSentMsg });
       }
 
       const tlHtml = tlItems.map((t, idx) => {
@@ -3136,7 +3713,7 @@ ${a.resumeUrl ? `<div style="margin-bottom:8px"><a href="${a.resumeUrl}" target=
     </div>`;
 
       el.innerHTML = `
-    <div class="of2-dh">
+<div class="of2-dh">
       <div class="of2-dh-left">
         <div class="avlg" style="background:${c.bg};color:${c.fg};width:38px;height:38px;font-size:13px">${ini(a.name)}</div>
         <div>
@@ -3144,12 +3721,15 @@ ${a.resumeUrl ? `<div style="margin-bottom:8px"><a href="${a.resumeUrl}" target=
           <div class="of2-dh-pos">${a.pos} · ${a.src || '-'}</div>
         </div>
       </div>
-      ${offerStatusBadge(status)}
+      <div style="display:flex;align-items:center;gap:8px">
+        ${resumeBtnHtml(a)}
+        ${offerStatusBadge(status)}
+<button style="padding:5px 11px;border-radius:7px;font-size:12px;font-family:inherit;cursor:pointer;border:1px solid #f0d090;background:#faeeda;color:#633806;display:flex;align-items:center;gap:5px" onclick="doWithdraw(${a.id})"><i class="ti ti-user-x" style="font-size:13px"></i>ยกเลิกกะทันหัน</button>
+      </div>
     </div>
     <div class="of2-db">
       <div class="of2-summary-card">
-        <div class="of2-summary-title"><i class="ti ti-briefcase"></i>Offer ที่อนุมัติ</div>
-        <div class="of2-summary-grid">
+          <div class="of2-summary-title"><i class="ti ti-briefcase"></i>รายละเอียด Offer</div>        <div class="of2-summary-grid">
           <div><div class="of2-sf-lbl">ตำแหน่ง</div><div class="of2-sf-val">${a.pos}</div></div>
           <div><div class="of2-sf-lbl">เงินเดือน</div><div class="of2-sf-val">${a.salary || '-'} ${a.salary ? 'บาท' : ''}</div></div>
           <div><div class="of2-sf-lbl">วันเริ่มงาน</div><div class="of2-sf-val">${a.startDate || '-'}</div></div>
@@ -3167,52 +3747,20 @@ ${status === 'accepted' || status === 'rejected' || sentValid ? '' : sendSection
       const _btn = document.getElementById('of2-send-btn');
       if (_btn) _btn.disabled = false;
     }
-    async function doSendOfferLetter(id) {
-      const channel = document.getElementById('of2-channel')?.value || 'Email';
-      const email = document.getElementById('of2-email')?.value.trim() || '';
-      const note = document.getElementById('of2-note')?.value || '';
-      //
-      if (channel === 'Email' && !email) {
-        showToast('กรุณากรอก Email ผู้สมัคร', true);
-        return;
-      }
-
-      const now = new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-      const ok = await dbUpdate(id, {
-        offerChannel: channel,
-        offerEmail: email,
-        offerSentNote: note,
-        offerSentAt: now,
-        offerSentBy: currentUser?.name || '',
-      });
-      if (ok) {
-        showToast('บันทึกว่าส่ง Offer Letter แล้ว');
-        await dbLoad();
-        renderOffer();
-        const a = getA(id);
-        if (a) renderOfferDetail(a);
-      }
-    }
-
-    async function doOfferResponse(id, result) {
-      const now = new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-      const ok = await dbUpdate(id, { offerResult: result, candidateRespondedAt: now });
-      if (ok) {
-        showToast(result === 'accepted' ? 'บันทึกว่าผู้สมัครตอบรับแล้ว' : 'บันทึกว่าผู้สมัครปฏิเสธแล้ว');
-        await dbLoad();
-        renderOffer();
-        const a = getA(id);
-        if (a) renderOfferDetail(a);
-        renderRep();
-      }
+    async function saveOfferRespNote(id) {
+      const note = document.getElementById('offer-resp-note-' + id)?.value || '';
+      const ok = await dbUpdate(id, { offerNote: note });
+      if (ok) showToast('บันทึกร่างแล้ว');
     }
     // ============ END JOB OFFER PAGE LOGIC ============
 
+    // ใหม่
     function renderRep() {
-      const tot = DATA.length;
-      const hired = DATA.filter(a => a.step >= 9).length;
-      const rej = DATA.filter(a => a.closed).length;
-      const inp = DATA.filter(a => !a.closed && a.step < 9).length;
+      const repData = DATA.filter(a => !a.deleted);
+      const tot = repData.length;
+      const hired = repData.filter(a => a.step >= 9).length;
+      const rej = repData.filter(a => a.closed).length;
+      const inp = repData.filter(a => !a.closed && a.step < 9).length;
       document.getElementById('stat-grid').innerHTML = `
     <div class="stat"><div class="stat-lbl">ผู้สมัครทั้งหมด</div><div class="stat-val">${tot}</div></div>
     <div class="stat"><div class="stat-lbl">กำลังดำเนินการ</div><div class="stat-val" style="color:#ba7517">${inp}</div></div>
@@ -3220,10 +3768,10 @@ ${status === 'accepted' || status === 'rejected' || sentValid ? '' : sendSection
     <div class="stat"><div class="stat-lbl">ปิดเคส/ไม่ผ่าน</div><div class="stat-val" style="color:#d4537e">${rej}</div></div>`;
       const stages = [
         { l: 'อัปโหลดเรซูเม่', v: tot, c: '#1d9e75' },
-        { l: 'HR คัดกรอง', v: DATA.filter(a => a.step >= 2).length, c: '#1d9e75' },
-        { l: 'ผู้บริหาร รอบ 1', v: DATA.filter(a => a.step >= 3).length, c: '#ba7517' },
-        { l: 'สัมภาษณ์', v: DATA.filter(a => a.step >= 4).length, c: '#378add' },
-        { l: 'ผู้บริหาร รอบ 2', v: DATA.filter(a => a.step >= 6).length, c: '#ba7517' },
+        { l: 'HR คัดกรอง', v: repData.filter(a => a.step >= 2).length, c: '#1d9e75' },
+        { l: 'ผู้บริหาร รอบ 1', v: repData.filter(a => a.step >= 3).length, c: '#ba7517' },
+        { l: 'สัมภาษณ์', v: repData.filter(a => a.step >= 4).length, c: '#378add' },
+        { l: 'ผู้บริหาร รอบ 2', v: repData.filter(a => a.step >= 6).length, c: '#ba7517' },
         { l: 'รับเข้าทำงาน', v: hired, c: '#0f6e56' },
       ];
       const mx = tot || 1;
@@ -3247,6 +3795,12 @@ ${status === 'accepted' || status === 'rejected' || sentValid ? '' : sendSection
       if (p === 'offer') renderOffer();
       if (p === 'rep') renderRep();
       if (p === 'offer-adm') renderOfferAdm();
+      if (p === 'history') {
+        renderHistory(); updateHistCounts();
+        updateListCounts();
+      }
+      if (p === 'list') { renderList(); updateListCounts(); }
+      if (p === 'exec-interested') renderExecInterested();
     }
 
     document.querySelectorAll('.ni').forEach(n => n.addEventListener('click', () => navTo(n.dataset.p)));
@@ -3268,12 +3822,43 @@ ${status === 'accepted' || status === 'rejected' || sentValid ? '' : sendSection
             renderOffer();
             renderRep();
             renderExec();
+            renderHistory();
+            renderOfferAdm();
+            renderExecInterested();
             // re-render detail เฉพาะตอนที่ไม่ได้ focus textarea/input
             const active = document.activeElement;
             const isTyping = active && (active.tagName === 'TEXTAREA' || active.tagName === 'INPUT');
-            if (selId && !isTyping) {
+            if (selId) {
               const a = getA(selId);
-              if (a) renderDetail(a);
+              if (a) {
+                if (!isTyping) {
+                  // ไม่ได้พิมพ์อยู่ → re-render ปกติ
+                  renderDetail(a);
+                } else {
+                  // กำลังพิมพ์อยู่ → preserve ค่า input/textarea แล้วค่อย render
+                  const activeId = active.id;
+                  const activeVal = active.value;
+                  renderDetail(a);
+                  // restore ค่าที่พิมพ์อยู่กลับ
+                  const restored = document.getElementById(activeId);
+                  if (restored) {
+                    restored.value = activeVal;
+                    restored.focus();
+                  }
+                }
+              }
+            }
+            if (selOAId && !isTyping) {
+              const a = getA(selOAId);
+              if (a) renderOADetail(a);
+            }
+            if (selHistId && !isTyping) {
+              const a = getA(selHistId);
+              if (a) renderHistDetail(a);
+            }
+            if (selOfferId && !isTyping) {
+              const a = getA(selOfferId);
+              if (a) renderOfferDetail(a);
             }
           }
         )
@@ -3284,37 +3869,47 @@ ${status === 'accepted' || status === 'rejected' || sentValid ? '' : sendSection
       const row = document.getElementById('of2-email-row');
       if (row) row.style.display = ch === 'Email' ? '' : 'none';
     }
+    async function doWithdraw(id) {
+      const confirmed = await askConfirm(
+        'ยืนยันว่าผู้สมัครยกเลิกกะทันหัน?',
+        { title: 'ผู้สมัครยกเลิกกะทันหัน', okText: 'ยืนยัน', danger: true }
+      );
+      if (!confirmed) return;
+      const targetA = DATA.find(x => x.id === id);
+      const ok = await dbUpdate(id, { closed: true, closeR: 'ผู้สมัครยกเลิกกะทันหัน', step: targetA?.step ?? 0 });
+      if (ok) { showToast('บันทึกแล้ว'); await rerender(id); }
+    }
+
     async function doDelete(id) {
-      if (!confirm('ยืนยันการลบผู้สมัครนี้? ไม่สามารถกู้คืนได้')) return;
-      const a = getA(id);
-      if (a?.resumeUrl) {
-        try {
-          const path = decodeURIComponent(a.resumeUrl.split('/resumes/')[1].split('?')[0]);
-          await _sb.storage.from('resumes').remove([path]);
-        } catch (e) { console.warn('ลบไฟล์ storage ไม่สำเร็จ:', e); }
-      }
-      const { error } = await _sb.from('applicants').delete().eq('id', id);
-      if (error) { showToast('ลบไม่สำเร็จ: ' + error.message, true); return; }
-      showToast('ลบข้อมูลแล้ว');
-      selId = null;
-      selOAId = null;
+      const confirmed = await askConfirm('ยืนยันการลบผู้สมัครนี้? ข้อมูลจะถูกลบออกจากระบบทั้งหมด (ทั้งฝั่ง HR และผู้บริหาร)', { title: 'ลบผู้สมัคร', okText: 'ลบ', danger: true });
+      if (!confirmed) return;
+
+      // เคลียร์ selection + panel ก่อน กัน race กับ realtime event
+      selId = null; selOAId = null; selOfferId = null; selHistId = null;
       document.getElementById('detail').innerHTML = '<div class="empty"><i class="ti ti-user-search"></i>เลือกผู้สมัครเพื่อดูรายละเอียด</div>';
       document.getElementById('offer-adm-detail').innerHTML = '<div class="empty"><i class="ti ti-clipboard-check"></i>เลือกผู้สมัครเพื่อพิจารณา Offer</div>';
+      document.getElementById('offer-detail').innerHTML = '<div class="empty"><i class="ti ti-briefcase"></i>เลือกผู้สมัครเพื่อดูรายละเอียด Offer</div>';
+      document.getElementById('history-detail').innerHTML = '<div class="empty"><i class="ti ti-history"></i>เลือกผู้สมัครเพื่อดูประวัติ</div>';
+
+      // ลบถาวรทันที: หายทั้งฝั่ง HR และฝั่งผู้บริหาร (ไม่ใช้การซ่อนแบบสองขั้นตอนอีกต่อไป)
+      const { error: delErr } = await _sb.from('applicants').delete().eq('id', id);
+      if (delErr) {
+        showToast('ลบไม่สำเร็จ: ' + delErr.message, true);
+      } else {
+        showToast('ลบข้อมูลแล้ว');
+      }
+
       await dbLoad();
-      renderList();
-      renderOfferAdm();
-      renderAdm();
-      renderRep();
-      renderExec();
+      renderList(); renderOfferAdm(); renderAdm(); renderRep(); renderExec(); renderHistory();
     }
     // ============ OFFER APPROVAL PAGE LOGIC ============
     let oaFilter = 'all';
     let selOAId = null;
 
     function oaStatus(a) {
-      if (a.adm3By && a.step >= 9) return 'approved';
+      if (a.adm3By && a.step >= 9 && a.offerResult !== 'rejected') return 'approved';
+      if (a.step === 7 && a.adm3Note && !a.adm3By) return 'returned';  // ← เพิ่มบรรทัดนี้
       if (a.adm3Note && a.step === 8 && a.closed) return 'returned';
-      // ถ้าถูก close ด้วยเหตุผลเกี่ยว offer ถือว่า returned
       if (a.closed && (a.closeR || '').includes('Offer')) return 'returned';
       return 'pending';
     }
@@ -3328,11 +3923,14 @@ ${status === 'accepted' || status === 'rejected' || sentValid ? '' : sendSection
     }
 
     function renderOfferAdm() {
-      // step=8 = รออนุมัติ Offer | step>=9 = อนุมัติแล้ว | closed+closeR มี "Offer" = ส่งกลับ
+      console.log('DATA count:', DATA.length);
+      console.log('deleted rows:', DATA.filter(a => a.deleted).map(a => a.name));
       const eligible = DATA.filter(a =>
-        a.step === 8 ||
-        (a.step >= 9 && !a.closed) ||
-        (a.closed && (a.closeR || '').includes('Offer'))
+        a.deleted !== true &&
+        !a.closed &&
+        (a.step === 8 ||
+          a.step >= 9 ||
+          (a.step === 7 && a.adm3Note && !a.adm3By))
       );
       const q = (document.getElementById('oa-search')?.value || '').trim();
       let list = eligible;
@@ -3364,7 +3962,7 @@ ${status === 'accepted' || status === 'rejected' || sentValid ? '' : sendSection
       }
 
       if (selOAId) {
-        const a = getA(selOAId);
+        const a = list.find(x => x.id === selOAId);
         if (a) renderOADetail(a); else { selOAId = null; document.getElementById('offer-adm-detail').innerHTML = '<div class="empty"><i class="ti ti-clipboard-check"></i>เลือกผู้สมัครเพื่อพิจารณา Offer</div>'; }
       }
     }
@@ -3461,9 +4059,13 @@ ${status === 'accepted' || status === 'rejected' || sentValid ? '' : sendSection
               <div class="of2-dh-pos">${a.pos} · ${a.src || '-'}</div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:8px">${stBadgeHtml}<button style="padding:5px 11px;border-radius:7px;font-size:12px;font-family:inherit;cursor:pointer;border:1px solid #f4c0d1;background:#fbeaf0;color:#72243e;display:flex;align-items:center;gap:5px;pointer-events:auto;opacity:1" onclick="doDelete(${a.id})"><i class="ti ti-trash" style="font-size:13px"></i>ลบ</button></div>
+<div style="display:flex;align-items:center;gap:8px">${resumeBtnHtml(a)}${stBadgeHtml}</div>
         </div>
-        <div class="oa-db">
+        <div style="display:flex;gap:0;border-bottom:1px solid #e8e6e0;background:#fff;flex-shrink:0">
+          <div id="oa-tab-offer" onclick="switchOATab('offer',${a.id})" style="padding:10px 18px;font-size:12.5px;font-weight:500;cursor:pointer;border-bottom:2px solid #1d9e75;color:#0f6e56">อนุมัติ Offer</div>
+          <div id="oa-tab-history" onclick="switchOATab('history',${a.id})" style="padding:10px 18px;font-size:12.5px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;color:#888780">ประวัติการสมัคร</div>
+        </div>
+        <div class="oa-db" id="oa-tab-content">
           ${resumeBlock}
           ${hrBlock}
           ${offerBlock}
@@ -3471,21 +4073,330 @@ ${status === 'accepted' || status === 'rejected' || sentValid ? '' : sendSection
         </div>`;
     }
 
-    async function doOAApprove(id) {
-      if (currentUser?.role !== 'admin') return;
-      const note = document.getElementById('oa-note-' + id)?.value || '';
-      const ok = await dbUpdate(id, { adm3Note: note, step: 9, adm3By: currentUser.name });
-      if (ok) { showToast('อนุมัติ Offer แล้ว'); await rerender(id); renderOfferAdm(); }
+    function switchOATab(tab, id) {
+      const a = getA(id);
+      if (!a) return;
+      const tabOffer = document.getElementById('oa-tab-offer');
+      const tabHistory = document.getElementById('oa-tab-history');
+      const content = document.getElementById('oa-tab-content');
+      if (!tabOffer || !tabHistory || !content) return;
+      if (tab === 'offer') {
+        tabOffer.style.borderBottomColor = '#1d9e75'; tabOffer.style.color = '#0f6e56';
+        tabHistory.style.borderBottomColor = 'transparent'; tabHistory.style.color = '#888780';
+        const ci = DATA.findIndex(x => x.id === a.id);
+        const c = col(ci < 0 ? 0 : ci);
+        const st = oaStatus(a);
+        const resumeBlock = a.resumeUrl ? `<div class="oa-section" style="margin-bottom:12px"><div class="oa-section-title"><i class="ti ti-file-text"></i>เรซูเม่</div><a href="${a.resumeUrl}" target="_blank" class="oa-resume-link"><i class="ti ti-download" style="font-size:14px"></i>ดาวน์โหลด Resume</a></div>` : '';
+        const hrBlock = `<div class="oa-section" style="margin-bottom:12px"><div class="oa-section-title"><i class="ti ti-message-star"></i>ความเห็น HR + ผลสัมภาษณ์</div>${a.hrNote ? `<div class="oa-note-box">${a.hrNote}</div>` : ''}<div style="display:flex;align-items:center;gap:8px;margin-top:6px">${a.hrRes === 'pass' ? '<span class="oa-result-tag oa-pass"><i class="ti ti-check" style="font-size:13px"></i>ผ่าน</span>' : a.hrRes === 'fail' ? '<span class="oa-result-tag oa-fail"><i class="ti ti-x" style="font-size:13px"></i>ไม่ผ่าน</span>' : ''}${a.hrResDet ? `<span style="font-size:12px;color:#5f5e5a">${a.hrResDet}</span>` : ''}</div></div>`;
+        const offerBlock = `<div class="oa-offer-box"><div class="oa-offer-box-title"><i class="ti ti-briefcase"></i>รายละเอียด Offer (รออนุมัติ)</div><div class="oa-grid" style="margin-bottom:10px"><div><div class="oa-field-lbl">ตำแหน่งที่บรรจุ</div><div class="oa-field-val">${a.pos}</div></div><div><div class="oa-field-lbl">เงินเดือน</div><div class="oa-field-val">${a.salary ? a.salary + ' บาท' : '—'}</div></div><div><div class="oa-field-lbl">วันเริ่มงาน</div><div class="oa-field-val">${a.startDate || '—'}</div></div><div><div class="oa-field-lbl">รูปแบบการจ้าง</div><div class="oa-field-val">${a.employmentType || 'พนักงานประจำ'}</div></div></div>${a.benefits ? `<div><div class="oa-field-lbl">สวัสดิการ</div><div style="font-size:12.5px;color:#2c2c2a;margin-top:3px">${a.benefits}</div></div>` : ''}</div>`;
+        let actionBlock = '';
+        if (st === 'pending') {
+          actionBlock = `<div class="oa-section" style="margin-bottom:0"><div class="oa-section-title"><i class="ti ti-message-dots"></i>หมายเหตุผู้บริหาร (แสดงให้ HR เห็น)</div><textarea class="tl-in" id="oa-note-${a.id}" placeholder="ระบุเงื่อนไข หมายเหตุ หรือเหตุผลการส่งกลับ...">${a.adm3Note || ''}</textarea><div class="oa-act-row"><button class="oa-btn-approve" onclick="doOAApprove(${a.id})"><i class="ti ti-circle-check"></i>อนุมัติ Offer</button><button class="oa-btn-return" onclick="doOAReturn(${a.id})"><i class="ti ti-arrow-back-up"></i>ส่งกลับแก้ไข</button></div></div>`;
+        } else if (st === 'approved') {
+          actionBlock = `<div class="oa-decided-box oa-decided-approved"><i class="ti ti-circle-check"></i><div><div>อนุมัติ Offer แล้ว${a.adm3By ? ' — โดย ' + a.adm3By : ''}</div>${a.adm3Note ? `<div style="font-size:12px;opacity:.8;margin-top:3px">${a.adm3Note}</div>` : ''}</div></div>`;
+        } else {
+          actionBlock = `<div class="oa-decided-box oa-decided-returned"><i class="ti ti-arrow-back-up"></i><div><div>ส่งกลับให้ HR แก้ไข</div>${a.adm3Note ? `<div style="font-size:12px;opacity:.8;margin-top:3px">${a.adm3Note}</div>` : ''}</div></div>`;
+        }
+        content.innerHTML = resumeBlock + hrBlock + offerBlock + actionBlock;
+      } else {
+        tabHistory.style.borderBottomColor = '#1d9e75'; tabHistory.style.color = '#0f6e56';
+        tabOffer.style.borderBottomColor = 'transparent'; tabOffer.style.color = '#888780';
+        content.innerHTML = renderOAHistory(a);
+      }
     }
 
-    async function doOAReturn(id) {
-      if (currentUser?.role !== 'admin') return;
-      const note = document.getElementById('oa-note-' + id)?.value || '';
-      // step กลับไป 7 ให้ HR แก้ไข Offer ใหม่
-      const ok = await dbUpdate(id, { adm3Note: note, step: 7, adm3By: '' });
-      if (ok) { showToast('ส่งกลับ HR แล้ว'); await rerender(id); renderOfferAdm(); }
+    function renderOAHistory(a) {
+      const rows = [
+        { icon: 'ti-user-check', color: '#378add', bg: '#e6f1fb', lbl: 'HR คัดกรอง', val: a.step >= 2 ? (a.hrBy ? `โดย ${a.hrBy}` : 'บันทึกแล้ว') : '—', sub: a.step >= 2 ? (a.hrNote || '') : '' },
+        { icon: 'ti-calendar', color: '#1d9e75', bg: '#e1f5ee', lbl: 'นัดสัมภาษณ์', val: a.intDate ? `${a.intDate} เวลา ${a.intTime} น.` : '—', sub: a.intBy ? `ผู้สัมภาษณ์: ${a.intBy}` : '' },
+        { icon: 'ti-clipboard-list', color: '#378add', bg: '#e6f1fb', lbl: 'ผลสัมภาษณ์', val: a.hrRes === 'pass' ? '✓ ผ่าน' : a.hrRes === 'fail' ? '✗ ไม่ผ่าน' : '—', sub: [a.hrResDet, a.hrSalary ? `💰 HR ตกลงเงินเดือน: ${a.hrSalary} บาท` : ''].filter(Boolean).join(' · ') },
+        { icon: 'ti-circle-check', color: '#ba7517', bg: '#faeeda', lbl: 'ผู้บริหารอนุมัติรับเข้าทำงาน', val: a.adm2By ? `โดย ${a.adm2By}` : (a.adm2 ? 'อนุมัติแล้ว' : '—'), sub: a.adm2 || '' },
+        { icon: 'ti-briefcase', color: '#0f6e56', bg: '#e1f5ee', lbl: 'เงินเดือน / วันเริ่มงาน', val: a.salary ? `${a.salary} บาท` : '—', sub: [a.startDate ? `เริ่มงาน: ${a.startDate} · ${a.employmentType || 'พนักงานประจำ'}` : '', a.hrSalary && a.hrSalary !== a.salary ? `(HR ตกลงไว้: ${a.hrSalary} บาท)` : ''].filter(Boolean).join(' · ') },
+      ];
+      const html = rows.map((r, idx) => {
+        const isLast = idx === rows.length - 1;
+        const dim = r.val === '—';
+        return `<div style="display:flex;gap:12px;position:relative;${!isLast ? '' : ''}">
+          ${!isLast ? `<div style="position:absolute;left:10px;top:22px;bottom:-8px;width:1px;background:#e8e6e0;z-index:0"></div>` : ''}
+          <div style="width:22px;height:22px;border-radius:50%;background:${dim ? '#f5f4f1' : r.bg};color:${dim ? '#d3d1c7' : r.color};border:${dim ? '1px solid #e8e6e0' : 'none'};display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1;margin-top:1px">
+            <i class="ti ${r.icon}" style="font-size:11px"></i>
+          </div>
+          <div style="flex:1;padding-bottom:14px">
+            <div style="font-size:13px;font-weight:500;color:${dim ? '#b0aea8' : '#2c2c2a'};margin-bottom:2px">${r.lbl}</div>
+            <div style="font-size:12.5px;font-weight:600;color:${dim ? '#c8c6bf' : (r.val.startsWith('✓') ? '#1d9e75' : r.val.startsWith('✗') ? '#d4537e' : '#2c2c2a')}">${r.val}</div>
+            ${r.sub && !dim ? `<div style="font-size:11.5px;color:#888780;margin-top:3px;line-height:1.5">${r.sub}</div>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+      return `<div style="background:#fff;border:1px solid #e8e6e0;border-radius:10px;padding:16px;margin-bottom:12px">
+        <div style="font-size:11px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;display:flex;align-items:center;gap:6px"><i class="ti ti-history" style="font-size:14px"></i>Timeline การสมัคร</div>
+        ${html}
+      </div>
+      ${a.phone ? `<div style="background:#fff;border:1px solid #e8e6e0;border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:10px"><i class="ti ti-phone" style="font-size:16px;color:#1d9e75"></i><div><div style="font-size:11px;color:#888780">เบอร์โทรศัพท์</div><div style="font-size:13.5px;font-weight:600">${a.phone}</div></div></div>` : ''}`;
     }
-    // ============ END OFFER APPROVAL PAGE LOGIC ============
+
+    // ============ HISTORY PAGE LOGIC ============
+    let histFilter = 'all';
+    let selHistId = null;
+
+    function setHistFilter(f) {
+      histFilter = f;
+      document.querySelectorAll('[data-hf]').forEach(c => c.classList.toggle('on', c.dataset.hf === f));
+      renderHistory();
+      updateHistCounts();
+    }
+
+    function updateHistCounts() {
+      const base = DATA.filter(a => a.deletedAdmin !== true && a.step >= 1); const counts = {
+        all: base.length,
+        'pre-int': base.filter(a => !a.closed && a.step >= 4 && a.step <= 5).length,
+        active: base.filter(a => !a.closed && a.step < 9).length,
+        hired: base.filter(a => a.step >= 9 && a.offerResult === 'accepted' && !a.closed).length,
+        closed: base.filter(a => a.closed).length,
+      };
+      document.querySelectorAll('[data-hf]').forEach(c => {
+        const f = c.dataset.hf;
+        const n = counts[f] ?? 0;
+        c.textContent = c.textContent.replace(/\s*\(\d+\)$/, '') + (n > 0 ? ` (${n})` : '');
+      });
+    }
+
+    function renderHistory() {
+      const q = (document.getElementById('hist-search')?.value || '').trim();
+      let list = DATA.filter(a =>
+        a.deletedAdmin !== true &&
+        a.step >= 1 &&
+        (a.name.includes(q) || a.pos.includes(q))
+      );
+      if (histFilter === 'pre-int') list = list.filter(a => !a.closed && a.step <= 5); if (histFilter === 'active') list = list.filter(a => !a.closed && a.step < 9); if (histFilter === 'hired') list = list.filter(a => a.step >= 9 && a.offerResult === 'accepted' && !a.closed);
+      if (histFilter === 'closed') list = list.filter(a => a.closed);
+
+      const el = document.getElementById('history-alist');
+      if (!list.length) { el.innerHTML = '<div class="empty" style="margin-top:30px"><i class="ti ti-user-off"></i>ไม่มีรายการ</div>'; return; }
+
+      const stepLabels = ['', 'อัปโหลดแล้ว', 'HR คัดกรอง', 'รอผู้บริหาร รอบ1', 'นัดสัมภาษณ์', 'บันทึกผลสัมภาษณ์', 'รอผู้บริหาร รอบ2', 'เตรียม Offer', 'รออนุมัติ Offer', 'รับเข้าทำงาน'];
+      el.innerHTML = list.map(a => {
+        const ci = DATA.findIndex(x => x.id === a.id);
+        const c = col(ci < 0 ? 0 : ci);
+        let badgeBg, badgeFg, badgeTxt;
+        if (a.closed) {
+          badgeBg = '#fbeaf0'; badgeFg = '#72243e'; badgeTxt = 'ปิดเคส';
+        } else if (a.step >= 9 && a.offerResult === 'accepted') {
+          badgeBg = '#eaf3de'; badgeFg = '#27500a'; badgeTxt = 'รับเข้าทำงาน';
+        } else if (a.step >= 9 && !a.offerResult) {
+          badgeBg = '#faeeda'; badgeFg = '#633806'; badgeTxt = 'รอผู้สมัครตอบรับ';
+        } else if (a.step >= 9 && a.offerResult === 'rejected') {
+          badgeBg = '#fbeaf0'; badgeFg = '#72243e'; badgeTxt = 'ผู้สมัครปฏิเสธ Offer';
+        } else if (a.step === 7) {
+          badgeBg = '#eaf3de'; badgeFg = '#27500a'; badgeTxt = 'เตรียม Offer';
+        } else if (a.step === 6) {
+          badgeBg = '#faeeda'; badgeFg = '#633806'; badgeTxt = 'รออนุมัติรับเข้าทำงาน';
+        } else if (a.step === 5) {
+          badgeBg = '#e6f1fb'; badgeFg = '#0c447c'; badgeTxt = 'บันทึกผลสัมภาษณ์';
+        } else if (a.step === 4 || a.step === 3) {
+          badgeBg = '#e1f5ee'; badgeFg = '#085041'; badgeTxt = 'นัดสัมภาษณ์';
+        } else if (a.step === 2) {
+          badgeBg = '#e6f1fb'; badgeFg = '#0c447c'; badgeTxt = 'HR คัดกรอง';
+        } else {
+          badgeBg = '#f5f4f1'; badgeFg = '#888780'; badgeTxt = 'อัปโหลดแล้ว';
+        }
+        return `<div class="of2-ai${selHistId === a.id ? ' on' : ''}" onclick="selectHist(${a.id})">
+          <div class="aiv" style="background:${c.bg};color:${c.fg};width:32px;height:32px;font-size:11.5px">${ini(a.name)}</div>
+          <div class="of2-ai-body">
+            <div class="of2-ai-name">${a.name}</div>
+            <div class="of2-ai-pos">${a.pos}</div>
+            <span style="display:inline-block;margin-top:3px;font-size:10px;padding:2px 7px;border-radius:5px;font-weight:500;background:${badgeBg};color:${badgeFg}">${badgeTxt}</span>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function selectHist(id) {
+      selHistId = id;
+      renderHistory();
+      const a = getA(id);
+      if (a) renderHistDetail(a);
+    }
+
+    function renderHistDetail(a) {
+      const el = document.getElementById('history-detail');
+      const ci = DATA.findIndex(x => x.id === a.id);
+      const c = col(ci < 0 ? 0 : ci);
+
+      let statusBadge = '';
+      if (a.closed) statusBadge = '<span class="badge b-no">ปิดเคส</span>';
+      else if (a.step >= 9 && a.offerResult === 'rejected') statusBadge = '<span class="badge b-no">ผู้สมัครปฏิเสธ Offer</span>';
+      else if (a.step >= 9 && a.offerResult === 'accepted') statusBadge = '<span class="badge b-hire">รับเข้าทำงาน</span>';
+      else if (a.step >= 9 && !a.offerResult) statusBadge = '<span class="badge b-wait">รอผู้สมัครตอบรับ</span>';
+      else statusBadge = '<span class="badge b-ok">กำลังดำเนินการ</span>';
+
+      const rows = [
+        {
+          icon: 'ti-user-check', color: '#378add', bg: '#e6f1fb', lbl: 'HR คัดกรอง',
+          val: a.step >= 2 ? (a.hrBy ? `โดย ${a.hrBy}` : 'บันทึกแล้ว') : '—',
+          sub: a.step >= 2 ? (a.hrNote || '') : ''
+        },
+        {
+          icon: 'ti-calendar', color: '#1d9e75', bg: '#e1f5ee', lbl: 'นัดสัมภาษณ์',
+          val: a.step >= 4 && a.intDate ? `${a.intDate}  ${a.intTime} น.` : '—',
+          sub: a.step >= 4 && a.intBy ? `ผู้สัมภาษณ์: ${a.intBy}` : ''
+        },
+        {
+          icon: 'ti-clipboard-list', color: '#378add', bg: '#e6f1fb', lbl: 'ผลสัมภาษณ์',
+          val: a.step >= 5 ? (a.hrRes === 'pass' ? '✓ ผ่าน' : a.hrRes === 'fail' ? '✗ ไม่ผ่าน' : '—') : '—',
+          sub: a.step >= 5 ? (a.hrResDet || '') : ''
+        },
+        {
+          icon: 'ti-circle-check', color: '#ba7517', bg: '#faeeda', lbl: 'ผู้บริหารอนุมัติรับเข้าทำงาน',
+          val: a.step >= 7 ? (a.adm2By ? `โดย ${a.adm2By}` : (a.adm2 ? 'อนุมัติแล้ว' : '—')) : '—',
+          sub: a.step >= 7 ? (a.adm2 || '') : ''
+        },
+        {
+          icon: 'ti-briefcase', color: '#0f6e56', bg: '#e1f5ee', lbl: 'เงินเดือน / วันเริ่มงาน',
+          val: a.step >= 7 && a.salary ? `${a.salary} บาท` : '—',
+          sub: a.step >= 7 && a.startDate ? `เริ่มงาน: ${a.startDate} · ${a.employmentType || 'พนักงานประจำ'}` : ''
+        },
+        {
+          icon: 'ti-send', color: '#0c447c', bg: '#e6f1fb', lbl: 'ส่ง Offer Letter',
+          val: a.step >= 9 && a.offerSentAt ? `${a.offerSentAt} · ${a.offerChannel || 'Email'}` : '—',
+          sub: a.step >= 9 && a.offerEmail ? `📧 ${a.offerEmail}` : ''
+        },
+        {
+          icon: 'ti-user-check', color: '#27500a', bg: '#eaf3de', lbl: 'ผู้สมัครตอบรับ',
+          val: a.step >= 9 ? (a.offerResult === 'accepted' ? '✓ ตอบรับ' : a.offerResult === 'rejected' ? '✗ ปฏิเสธ' : '—') : '—',
+          sub: a.step >= 9 ? (a.candidateRespondedAt || '') : ''
+        }
+      ];
+
+      const tlHtml = rows.map((r, idx) => {
+        const isLast = idx === rows.length - 1;
+        const dim = r.val === '—';
+        const valColor = r.val.startsWith('✓') ? '#1d9e75' : r.val.startsWith('✗') ? '#d4537e' : (dim ? '#c8c6bf' : '#2c2c2a');
+        return `<div style="display:flex;gap:12px;position:relative">
+          ${!isLast ? `<div style="position:absolute;left:10px;top:22px;bottom:-8px;width:1px;background:#e8e6e0;z-index:0"></div>` : ''}
+          <div style="width:22px;height:22px;border-radius:50%;background:${dim ? '#f5f4f1' : r.bg};color:${dim ? '#d3d1c7' : r.color};border:${dim ? '1px solid #e8e6e0' : 'none'};display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1;margin-top:1px">
+            <i class="ti ${r.icon}" style="font-size:11px"></i>
+          </div>
+          <div style="flex:1;padding-bottom:14px">
+            <div style="font-size:13px;font-weight:500;color:${dim ? '#b0aea8' : '#2c2c2a'};margin-bottom:2px">${r.lbl}</div>
+            <div style="font-size:12.5px;font-weight:600;color:${valColor}">${r.val}</div>
+            ${r.sub && !dim ? `<div style="font-size:11.5px;color:#888780;margin-top:3px;line-height:1.5">${r.sub}</div>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+
+      // ปิดเคส
+      const closedBlock = a.closed ? `
+        <div style="display:flex;gap:12px">
+          <div style="width:22px;height:22px;border-radius:50%;background:#fbeaf0;color:#d4537e;border:1.5px solid #d4537e;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
+            <i class="ti ti-x" style="font-size:11px"></i>
+          </div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:500;color:#72243e">ปิดเคส</div>
+          <div style="font-size:12px;background:#fbeaf0;border:1px solid #f4c0d1;color:#72243e;border-radius:7px;padding:7px 10px;margin-top:4px">${a.closeR || '-'}</div>
+          ${a.adm3Note ? `<div style="font-size:12px;background:#fbeaf0;border:1px solid #f4c0d1;color:#72243e;border-radius:7px;padding:7px 10px;margin-top:5px"><b>โน้ตผู้บริหาร:</b> ${a.adm3Note}</div>` : ''}
+          </div>
+        </div>` : '';
+
+      el.innerHTML = `
+        <div class="of2-dh">
+          <div class="of2-dh-left">
+            <div class="avlg" style="background:${c.bg};color:${c.fg};width:38px;height:38px;font-size:13px">${ini(a.name)}</div>
+            <div>
+              <div class="of2-dh-name">${a.name}</div>
+              <div class="of2-dh-pos">${a.pos} · ${a.src || '-'}${a.phone ? ' · ' + a.phone : ''}</div>
+            </div>
+          </div>
+        <div style="display:flex;align-items:center;gap:8px">
+            ${resumeBtnHtml(a)}
+            ${statusBadge}
+          ${!a.closed && a.step >= 1 && !a.execInterested
+          ? `<button class="btn-exec-interest" style="padding:5px 11px;border-radius:7px;font-size:12px;font-family:inherit;cursor:pointer;border:1px solid #cbe6da;background:#e1f5ee;color:#085041;display:flex;align-items:center;gap:5px;pointer-events:auto!important;opacity:1!important" onclick="doExecInterest(${a.id})"><i class="ti ti-star" style="font-size:13px"></i>สนใจสัมภาษณ์</button>` : ''}
+            ${a.execInterested && !a.closed && a.step >= 1 ? `<span style="padding:5px 11px;border-radius:7px;font-size:12px;border:1px solid #cbe6da;background:#e1f5ee;color:#085041;display:flex;align-items:center;gap:5px"><i class="ti ti-star-filled" style="font-size:13px"></i>สนใจแล้ว</span>` : ''}
+            <button style="padding:5px 11px;border-radius:7px;font-size:12px;font-family:inherit;cursor:pointer;border:1px solid #f4c0d1;background:#fbeaf0;color:#72243e;display:flex;align-items:center;gap:5px" onclick="doDeleteAdmin(${a.id})"><i class="ti ti-trash" style="font-size:13px"></i>ลบ</button>
+          </div>
+        </div>
+        <div class="oa-db">
+          ${a.resumeUrl ? `<div style="margin-bottom:12px"><a href="${a.resumeUrl}" target="_blank" class="oa-resume-link"><i class="ti ti-download" style="font-size:14px"></i>ดาวน์โหลด Resume</a></div>` : ''}
+          <div style="background:#fff;border:1px solid #e8e6e0;border-radius:10px;padding:16px">
+            <div style="font-size:11px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;display:flex;align-items:center;gap:6px">
+              <i class="ti ti-history" style="font-size:14px"></i>Timeline การสมัคร
+            </div>
+${tlHtml}
+${closedBlock}
+</div>
+${a.phone ? `
+<div style="background:#fff;border:1px solid #e8e6e0;border-radius:10px;padding:14px 16px;margin-top:12px;display:flex;align-items:center;gap:10px">
+  <i class="ti ti-phone" style="font-size:16px;color:#1d9e75"></i>
+  <div>
+    <div style="font-size:11px;color:#888780">เบอร์โทรศัพท์</div>
+    <div style="font-size:13.5px;font-weight:600">${a.phone}</div>
+  </div>
+</div>` : ''}
+</div>`;
+    }
+    // ============ END HISTORY PAGE LOGIC ============
+
+    async function doExecInterest(id) {
+      const confirmed = await askConfirm('ยืนยันว่าสนใจสัมภาษณ์ผู้สมัครนี้?', { title: 'สนใจสัมภาษณ์', okText: 'ยืนยัน' });
+      if (!confirmed) return;
+      const ok = await dbUpdate(id, { execInterested: true });
+      if (ok) { showToast('บันทึกว่าสนใจสัมภาษณ์แล้ว'); await rerender(id); renderExecInterested(); }
+    }
+
+    function renderExecInterested() {
+      const list = DATA.filter(a => a.execInterested && !a.closed);
+      const el = document.getElementById('exec-interested-list');
+      if (!el) return;
+      if (!list.length) {
+        el.innerHTML = '<div class="empty"><i class="ti ti-star"></i>ยังไม่มีรายการ</div>';
+        return;
+      }
+      el.innerHTML = list.map(a => {
+        const ci = DATA.findIndex(x => x.id === a.id);
+        const c = col(ci < 0 ? 0 : ci);
+        const stepLabels = ['', 'อัปโหลดแล้ว', 'HR คัดกรอง', 'รอผู้บริหาร รอบ1', 'นัดสัมภาษณ์'];
+        return `<div class="exec-card">
+          <div class="exec-top">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div class="aiv" style="background:${c.bg};color:${c.fg};width:36px;height:36px;font-size:12px">${ini(a.name)}</div>
+              <div>
+                <div class="exec-name">${a.name}</div>
+                <div class="exec-pos">${a.pos} · ${a.src || '-'} · ${a.date}</div>
+                  ${a.intDate ? `<div style="font-size:11.5px;color:#085041;background:#e1f5ee;border-radius:6px;padding:3px 9px;display:inline-flex;align-items:center;gap:5px;margin-top:4px"><i class="ti ti-calendar" style="font-size:12px"></i>นัดสัมภาษณ์: ${a.intDate} ${a.intTime ? a.intTime + ' น.' : ''}</div>` : ''}
+              </div>
+            </div>
+            <span style="font-size:10px;padding:3px 9px;border-radius:20px;font-weight:500;background:#faeeda;color:#633806">${stepLabels[a.step] || 'step ' + a.step}</span>
+          </div>
+          ${a.hrNote ? `<div class="exec-note">${a.hrNote}</div>` : ''}
+          ${a.phone ? `<div style="font-size:11.5px;color:#888780;margin-top:4px"><i class="ti ti-phone" style="font-size:12px;margin-right:3px"></i>${a.phone}</div>` : ''}
+          ${a.resumeUrl ? `<div style="margin-top:8px"><a href="${a.resumeUrl}" target="_blank" class="oa-resume-link"><i class="ti ti-download" style="font-size:13px"></i>ดาวน์โหลด Resume</a></div>` : ''}
+        </div>`;
+      }).join('');
+    }
+    async function doDeleteAdmin(id) {
+      const confirmed = await askConfirm('ลบออกจากประวัติผู้บริหาร?', { title: 'ลบประวัติ', okText: 'ลบ', danger: true });
+      if (!confirmed) return;
+
+      const { data: raw } = await _sb.from('applicants').select('deleted, resume_url').eq('id', id).single();
+      const ok = await dbUpdate(id, { deletedAdmin: true });
+      if (!ok) return;
+
+      if (raw?.deleted) {
+        const { error: delErr } = await _sb.from('applicants').delete().eq('id', id);
+        if (delErr) {
+          showToast('ลบถาวรไม่สำเร็จ: ' + delErr.message, true);
+        } else {
+          showToast('ลบข้อมูลถาวรแล้ว');
+        }
+      } else {
+        showToast('ลบออกจากประวัติผู้บริหารแล้ว');
+      }
+
+      selHistId = null;
+      document.getElementById('history-detail').innerHTML = '<div class="empty"><i class="ti ti-history"></i>เลือกผู้สมัครเพื่อดูประวัติ</div>';
+      await dbLoad();
+      renderHistory(); renderOfferAdm(); renderAdm(); renderRep(); renderExec(); renderList();
+    }
 
   </script>
 </body>
